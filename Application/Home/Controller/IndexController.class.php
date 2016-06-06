@@ -11,6 +11,11 @@ class IndexController extends Controller
     }
 
     public function test(){
-        echo('aaa');
+//        echo('aaa');
+
+        $Data     = M('user');// 实例化Data数据模型
+        $result     = $Data->count();
+        $this->assign('result',$result);
+        $this->display();
     }
 }
