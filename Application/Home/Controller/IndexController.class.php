@@ -38,16 +38,16 @@ class IndexController extends Controller
             'appsecret' => '57fb691b606420fe6d9bec9ef5c69274' //填写高级调用功能的密钥
         );
         $weObj = new \Org\Wx\Wechat($options);
-        //$weObj->valid();
+        $weObj->valid();
         $type = $weObj->getRev()->getRevType();
         switch($type) {
-            case Wechat::MSGTYPE_TEXT:
+            case \Org\Wx\Wechat::MSGTYPE_TEXT:
                 $weObj->text("hello, I'm wechat 老财呵呵呵")->reply();
                 exit;
                 break;
-            case Wechat::MSGTYPE_EVENT:
+            case \Org\Wx\Wechat::MSGTYPE_EVENT:
                 break;
-            case Wechat::MSGTYPE_IMAGE:
+            case \Org\Wx\Wechat::MSGTYPE_IMAGE:
                 break;
             default:
                 $weObj->text("help info")->reply();
