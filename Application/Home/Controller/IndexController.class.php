@@ -3,7 +3,6 @@
 namespace Home\Controller;
 
 //import('Vendor.wechat.Wechat');
-include 'wx_sample.php';
 
 use Think\Controller;
 
@@ -24,9 +23,9 @@ class IndexController extends Controller
         //echo('aaa');
 
 //define your token
-        define("TOKEN", "1qaz2wsx");
-        $wechatObj = new wechatCallbackapiTest();
-        $wechatObj->valid();
+//        define("TOKEN", "1qaz2wsx");
+//        $wechatObj = new wechatCallbackapiTest();
+//        $wechatObj->valid();
 
 //
 ////        $Data     = M('user');// 实例化Data数据模型
@@ -34,14 +33,14 @@ class IndexController extends Controller
 ////        $this->assign('result',$result);
 ////        $this->display();
 //
-//        $options = array(
-//            'token' => '1qaz2wsx', //填写你设定的key
-//            'encodingaeskey' => 'bMY75kCr4C4tGDtKFNHjZ0I5ZKNDU42DQXAQzxGY5v0', //填写加密用的EncodingAESKey
-//            'appid' => 'wx68b800e79738a452', //填写高级调用功能的app id
-//            'appsecret' => '57fb691b606420fe6d9bec9ef5c69274' //填写高级调用功能的密钥
-//        );
-//        $weObj = new Wechat($options);
-//        $weObj->valid();
+        $options = array(
+            'token' => '1qaz2wsx', //填写你设定的key
+            'encodingaeskey' => 'bMY75kCr4C4tGDtKFNHjZ0I5ZKNDU42DQXAQzxGY5v0', //填写加密用的EncodingAESKey
+            'appid' => 'wx68b800e79738a452', //填写高级调用功能的app id
+            'appsecret' => '57fb691b606420fe6d9bec9ef5c69274' //填写高级调用功能的密钥
+        );
+        $weObj = new \Org\Wx\Wechat($options);
+        $weObj->valid();
 
 
     }
