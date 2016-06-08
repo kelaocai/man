@@ -3,6 +3,7 @@
 namespace Home\Controller;
 
 //import('Vendor.wechat.Wechat');
+import('ORG.Wx.Wechat');
 
 use Think\Controller;
 
