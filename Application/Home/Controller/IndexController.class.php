@@ -2,9 +2,6 @@
 
 namespace Home\Controller;
 
-//import('Vendor.wechat.Wechat');
-//import('ORG.Wx.Wechat');
-
 use Think\Controller;
 
 include 'FeyinAPI.php';
@@ -42,6 +39,19 @@ class IndexController extends Controller
         );
         $weObj = new \Org\Wx\Wechat($options);
         $weObj->valid();
+        $type = $weObj->getRev()->getRevType();
+        switch($type) {
+            case Wechat::MSGTYPE_TEXT:
+                $weObj->text("hello, I'm wechat 老财呵呵呵")->reply();
+                exit;
+                break;
+            case Wechat::MSGTYPE_EVENT:
+                break;
+            case Wechat::MSGTYPE_IMAGE:
+                break;
+            default:
+                $weObj->text("help info")->reply();
+        }
 
 
     }
