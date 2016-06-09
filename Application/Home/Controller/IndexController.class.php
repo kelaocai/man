@@ -34,15 +34,24 @@ class IndexController extends Controller
         $options = array(
             'token' => '1qaz2wsx', //填写你设定的key
             'encodingaeskey' => 'bMY75kCr4C4tGDtKFNHjZ0I5ZKNDU42DQXAQzxGY5v0', //填写加密用的EncodingAESKey
-            'appid' => 'wx68b800e79738a452', //填写高级调用功能的app id
-            'appsecret' => '57fb691b606420fe6d9bec9ef5c69274' //填写高级调用功能的密钥
+            'appid' => 'wx8e9af23cb8d804e8', //填写高级调用功能的app id
+            'appsecret' => '3208fc5407922bd7e3327f78febaa6eb' //填写高级调用功能的密钥
         );
         $weObj = new \Org\Wx\Wechat($options);
         $weObj->valid();
         $type = $weObj->getRev()->getRevType();
-        switch($type) {
+        switch ($type) {
             case \Org\Wx\Wechat::MSGTYPE_TEXT:
-                $weObj->text("hello, I'm wechat 老财呵呵呵")->reply();
+                $msgNo = time() + 1;
+                $freeMessage = array(
+                    'memberCode' => MEMBER_CODE,
+                    'msgDetail' => '' . $weObj->getRevContent(),
+                    'deviceNo' => DEVICE_NO,
+                    'msgNo' => $msgNo,
+                );
+                $pr_status = sendFreeMessage($freeMessage);
+
+                $weObj->text("发送状态2:" . $pr_status)->reply();
                 exit;
                 break;
             case \Org\Wx\Wechat::MSGTYPE_EVENT:
@@ -54,6 +63,36 @@ class IndexController extends Controller
         }
 
 
+    }
+
+    public function fy()
+    {
+        testSendFormatedMessage();
+    }
+
+    public function menu()
+    {
+        $options = array(
+            'token' => '1qaz2wsx', //填写你设定的key
+            'encodingaeskey' => 'bMY75kCr4C4tGDtKFNHjZ0I5ZKNDU42DQXAQzxGY5v0', //填写加密用的EncodingAESKey
+            'appid' => 'wx8e9af23cb8d804e8', //填写高级调用功能的app id
+            'appsecret' => '3208fc5407922bd7e3327f78febaa6eb' //填写高级调用功能的密钥
+        );
+        //获取菜单操作:
+        $weObj = new \Org\Wx\Wechat($options);
+        //$weObj->valid();
+        $menu = $weObj->getMenu();
+        dump($menu);
+        //设置菜单
+        $newmenu = array(
+            "button" =>
+                array(
+                    array('type' => 'click', 'name' => '捣蛋', 'key' => 'MENU_KEY_NEWS'),
+                    array('type' => 'view', 'name' => '我爱包菜', 'url' => 'http://www.baocai.us'),
+                )
+        );
+        dump($newmenu);
+        $result = $weObj->createMenu($newmenu);
     }
 
 
