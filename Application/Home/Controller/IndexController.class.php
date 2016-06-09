@@ -16,6 +16,7 @@ class IndexController extends Controller
     }
 
 
+
     public function wx()
     {
         //echo('aaa');
@@ -49,9 +50,16 @@ class IndexController extends Controller
                     'deviceNo' => DEVICE_NO,
                     'msgNo' => $msgNo,
                 );
-                $pr_status = sendFreeMessage($freeMessage);
+//                $pr_status = sendFreeMessage($freeMessage);
+                $pr_status=1;
+                $usr_info=$weObj->getUserInfo($weObj->getRevFrom());
+                //\Think\Log::write($usr_info['nickname'].'我的记12录'.$weObj->getRevFrom(),'WARN');
 
-                $weObj->text("发送状态2:" . $pr_status)->reply();
+                $pr_status=sendMail('34206043@qq.com',$usr_info['nickname'].'微信发来信息',$weObj->getRevContent().'<img src='.$usr_info['headimgurl'].' />.');
+
+                $weObj->text("发送:" . $pr_status)->reply();
+
+
                 exit;
                 break;
             case \Org\Wx\Wechat::MSGTYPE_EVENT:
@@ -68,6 +76,17 @@ class IndexController extends Controller
     public function fy()
     {
         testSendFormatedMessage();
+    }
+
+    public function test()
+    {
+
+        if(sendMail('34206043@qq.com',"i d",'hello'))
+            echo 'success';
+            //$this->success('发送成功！');
+        else
+            //$this->error('发送失败');
+        echo "failure";
     }
 
     public function menu()
@@ -93,6 +112,33 @@ class IndexController extends Controller
         );
         dump($newmenu);
         $result = $weObj->createMenu($newmenu);
+    }
+
+    /**
+     *
+     */
+    public function kdt(){
+        Vendor('Kdt.lib.KdtApiClient');
+        $appId = '74a4bcc3b638a70415';
+        $appSecret = '91b7dffe7314369b44f2a1cc79b39695';
+        $client = new \KdtApiClient($appId, $appSecret);
+
+
+        $method = 'kdt.trades.sold.get';
+        $params = [
+            'page_size' => 50
+        ];
+
+
+        $rs= $client->get($method, $params);
+        foreach ($rs as $key=>$val){
+            foreach ($val['trades'] as $key2=>$val2){
+                echo( $val2['title'].'--'.$val2['buyer_nick']).'<br>'.'<br>';
+            }
+
+        }
+
+
     }
 
 
