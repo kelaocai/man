@@ -16,10 +16,11 @@ class IndexController extends Controller
     }
 
 
-
     public function wx()
     {
         //echo('aaa');
+
+        Vendor('Kdt.lib.SimpleHttpClient');
 
 //define your token
 //        define("TOKEN", "1qaz2wsx");
@@ -51,11 +52,11 @@ class IndexController extends Controller
                     'msgNo' => $msgNo,
                 );
 //                $pr_status = sendFreeMessage($freeMessage);
-                $pr_status=1;
-                $usr_info=$weObj->getUserInfo($weObj->getRevFrom());
+                $pr_status = 1;
+                $usr_info = $weObj->getUserInfo($weObj->getRevFrom());
                 //\Think\Log::write($usr_info['nickname'].'我的记12录'.$weObj->getRevFrom(),'WARN');
 
-                $pr_status=sendMail('34206043@qq.com',$usr_info['nickname'].'微信发来信息',$weObj->getRevContent().'<img src='.$usr_info['headimgurl'].' />.');
+                //$pr_status=sendMail('34206043@qq.com',$usr_info['nickname'].'微信发来信息',$weObj->getRevContent().'<img src='.$usr_info['headimgurl'].' />.');
 
                 $weObj->text("发送:" . $pr_status)->reply();
 
@@ -65,6 +66,27 @@ class IndexController extends Controller
             case \Org\Wx\Wechat::MSGTYPE_EVENT:
                 break;
             case \Org\Wx\Wechat::MSGTYPE_IMAGE:
+                break;
+            case \Org\Wx\Wechat::MSGTYPE_LOCATION:
+                $Location_X = $weObj->getRevGeo()['x'];
+                $Location_Y = $weObj->getRevGeo()['y'];
+                //$weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
+                $params = [
+                    'ak' => 'lB3MdI4HADGDT8trntoLxOWR',
+                    'geotable_id' => 143034,
+                    'location' => $Location_Y . ',' . $Location_X,
+                    'radius' => 1500
+                ];
+                $rs = \SimpleHttpClient::get('http://api.map.baidu.com/geosearch/v3/nearby', $params);
+                $data = json_decode($rs, true);
+                $add_list = '';
+                \Think\Log::write($rs . 'sss', 'WARN');
+                foreach ($data['contents'] as $key => $val) {
+                    $add_list = $add_list . $val['shop_name'] . ":" . $val['address'] . "\n";
+
+                }
+
+                $weObj->text("发现【" . $data['total'] . "】颗包菜\n" . $add_list)->reply();
                 break;
             default:
                 $weObj->text("help info")->reply();
@@ -81,12 +103,12 @@ class IndexController extends Controller
     public function test()
     {
 
-        if(sendMail('34206043@qq.com',"i d",'hello'))
+        if (sendMail('34206043@qq.com', "i d", 'hello'))
             echo 'success';
-            //$this->success('发送成功！');
+        //$this->success('发送成功！');
         else
             //$this->error('发送失败');
-        echo "failure";
+            echo "failure";
     }
 
     public function menu()
@@ -117,7 +139,8 @@ class IndexController extends Controller
     /**
      *
      */
-    public function kdt(){
+    public function kdt()
+    {
         Vendor('Kdt.lib.KdtApiClient');
         $appId = '74a4bcc3b638a70415';
         $appSecret = '91b7dffe7314369b44f2a1cc79b39695';
@@ -130,10 +153,10 @@ class IndexController extends Controller
         ];
 
 
-        $rs= $client->get($method, $params);
-        foreach ($rs as $key=>$val){
-            foreach ($val['trades'] as $key2=>$val2){
-                echo( $val2['title'].'--'.$val2['buyer_nick']).'<br>'.'<br>';
+        $rs = $client->get($method, $params);
+        foreach ($rs as $key => $val) {
+            foreach ($val['trades'] as $key2 => $val2) {
+                echo ($val2['title'] . '--' . $val2['buyer_nick']) . '<br>' . '<br>';
             }
 
         }
