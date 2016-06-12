@@ -3,8 +3,13 @@
 namespace Home\Controller;
 
 use Think\Controller;
+use Think\Log\Driver\Sae;
+use Think\Think;
 
 include 'FeyinAPI.php';
+Vendor('Kdt.lib.SimpleHttpClient');
+Vendor('Kdt.lib.KdtApiClient');
+Vendor('Kdt.lib.KdtApiOauthClient');
 
 
 class IndexController extends Controller
@@ -18,21 +23,7 @@ class IndexController extends Controller
 
     public function wx()
     {
-        //echo('aaa');
 
-        Vendor('Kdt.lib.SimpleHttpClient');
-
-//define your token
-//        define("TOKEN", "1qaz2wsx");
-//        $wechatObj = new wechatCallbackapiTest();
-//        $wechatObj->valid();
-
-//
-////        $Data     = M('user');// 实例化Data数据模型
-////        $result     = $Data->count();
-////        $this->assign('result',$result);
-////        $this->display();
-//
         $options = [
             'token' => C('WX_TOKEN'), //填写你设定的key
             'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
@@ -53,8 +44,8 @@ class IndexController extends Controller
                     'deviceNo' => DEVICE_NO,
                     'msgNo' => $msgNo,
                 );
-//                $pr_status = sendFreeMessage($freeMessage);
-                $pr_status = 1;
+                $pr_status = sendFreeMessage($freeMessage);
+//                $pr_status = 1;
                 $usr_info = $weObj->getUserInfo($weObj->getRevFrom());
                 //\Think\Log::write($usr_info['nickname'].'我的记12录'.$weObj->getRevFrom(),'WARN');
 
@@ -70,7 +61,7 @@ class IndexController extends Controller
             case \Org\Wx\Wechat::MSGTYPE_IMAGE:
                 break;
             case \Org\Wx\Wechat::MSGTYPE_LOCATION:
-                $Geo=$weObj->getRevGeo();
+                $Geo = $weObj->getRevGeo();
                 $Location_X = $Geo['x'];
                 $Location_Y = $Geo['y'];
 //                $weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
@@ -106,12 +97,22 @@ class IndexController extends Controller
     public function test()
     {
 
-        if (sendMail('34206043@qq.com', "i d", 'hello'))
-            echo 'success';
-        //$this->success('发送成功！');
-        else
-            //$this->error('发送失败');
-            echo "failure";
+        //S('wx_$access_token',null);
+        $access_token = $this->getWxtoken();
+        $client = new \KdtApiOauthClient();
+        $method = 'kdt.trades.sold.get';
+        $params = [
+            'page_size' => 50
+        ];
+
+        $rs = $client->get($access_token, $method, $params);
+        foreach ($rs as $key => $val) {
+            foreach ($val['trades'] as $key2 => $val2) {
+                echo ($val2['title'] . '--' . $val2['buyer_nick']) . '<br>' . '<br>';
+            }
+
+        }
+
     }
 
     public function menu()
@@ -144,7 +145,6 @@ class IndexController extends Controller
      */
     public function kdt()
     {
-        Vendor('Kdt.lib.KdtApiClient');
         $appId = '74a4bcc3b638a70415';
         $appSecret = '91b7dffe7314369b44f2a1cc79b39695';
         $client = new \KdtApiClient($appId, $appSecret);
@@ -165,6 +165,44 @@ class IndexController extends Controller
         }
 
 
+    }
+
+    public function callback()
+    {
+        Vendor('Kdt.lib.KdtApiOauthClient');
+        $code = $_GET['code'];
+        $state = $_GET['state'];
+        if ($state == 'bc') {
+            $redirect_uri = 'http://baocai.vip.natapp.cn/man/?m=home&c=index&a=callback';
+            $params = [
+                'client_id' => '62100d9ae0aa97dd6e',
+                'client_secret' => '15ee3653cd2f28e255ba09f9d999389d',
+                'grant_type' => 'authorization_code',
+                'code' => $code,
+                'redirect_uri' => $redirect_uri
+            ];
+//            dump($params);
+            $rs = \SimpleHttpClient::post('https://open.koudaitong.com/oauth/token', $params);
+            $data = json_decode($rs, true);
+
+            $access_token = $data['access_token'];
+            S('wx_$access_token', $access_token, $data['expires_in']);
+            $this->test();
+        } else {
+            echo true;
+        }
+
+    }
+
+    private function getWxtoken()
+    {
+        $access_token = S('wx_$access_token');
+        if ($access_token) {
+            return $access_token;
+        } else {
+            $redirect_uri = 'http://baocai.vip.natapp.cn/man/?m=home&c=index&a=callback';
+            redirect("https://open.koudaitong.com/oauth/authorize?client_id=62100d9ae0aa97dd6e&response_type=code&state=bc&redirect_uri=http://baocai.vip.natapp.cn/man/?m=home%26c=index%26a=callback", 2, '页面跳转中...');
+        }
     }
 
 
