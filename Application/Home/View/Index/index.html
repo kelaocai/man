@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <title>Bootstrap 101 Template</title>
+    <title>一颗包菜智能门店</title>
 
     <!-- Bootstrap -->
     <link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -23,11 +23,77 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">
-               hello baocai
+                <span class="glyphicon glyphicon-signal" aria-hidden="true"></span>
             </a>
         </div>
     </div>
 </nav>
+
+<div class="container">
+
+    <div class="starter-template">
+        <h1>销售数据汇总</h1>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">店铺名称</h3>
+            </div>
+            <div class="panel-body">
+                2016年5月
+                <!-- Table -->
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>商品</th>
+                        <th>价格</th>
+                        <th>购买人</th>
+                        <th>打印小票</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <volist name="list" id="vo">
+                        <tr>
+                            <th scope="row">{$i}</th>
+                            <td style="width: 30%">{$vo.title|mb_substr=0,20}</td>
+                            <td>{$vo.payment}</td>
+                            <td>{$vo.buyer_nick}</td>
+                            <td>
+                                <button type="button" class="btn btn-default btn-sm" data-toggle="modal"
+                                        data-target=".bs-example-modal-sm">print
+                                </button>
+                            </td>
+                        </tr>
+                    </volist>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Small modal -->
+
+
+        <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content container" >
+                    <div class="panel panel-default" style="margin-top: 10px;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Tips</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h3 class="panel-title">打印完毕!</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div><!-- /.container -->
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>

@@ -16,7 +16,18 @@ class IndexController extends Controller
 {
 
     public function index()
+
     {
+        $access_token = $this->getWxtoken();
+        $client = new \KdtApiOauthClient();
+        $method = 'kdt.trades.sold.get';
+        $params = [
+            'page_size' => 50
+        ];
+
+        $list = $client->get($access_token, $method, $params);
+//        dump($list);
+        $this->assign('list',$list["response"]['trades']);
         $this->display();
     }
 
@@ -96,7 +107,7 @@ class IndexController extends Controller
     public function test()
     {
 
-        //S('wx_$access_token',null);
+//        S('wx_$access_token',null);
         $access_token = $this->getWxtoken();
         $client = new \KdtApiOauthClient();
         $method = 'kdt.trades.sold.get';
