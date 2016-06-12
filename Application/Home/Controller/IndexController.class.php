@@ -74,23 +74,23 @@ class IndexController extends Controller
                 $Geo=$weObj->getRevGeo();
                 $Location_X = $Geo['x'];
                 $Location_Y = $Geo['y'];
-                //$weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
-                $params = [
-                    'ak' => 'lB3MdI4HADGDT8trntoLxOWR',
-                    'geotable_id' => 143034,
-                    'location' => $Location_Y . ',' . $Location_X,
-                    'radius' => 1500
-                ];
-                $rs = \SimpleHttpClient::get('http://api.map.baidu.com/geosearch/v3/nearby', $params);
-                $data = json_decode($rs, true);
-                $add_list = '';
-                \Think\Log::write($rs . 'sss', 'WARN');
-                foreach ($data['contents'] as $key => $val) {
-                    $add_list = $add_list . $val['shop_name'] . ":" . $val['address'] . "\n";
-
-                }
-
-                $weObj->text("发现【" . $data['total'] . "】颗包菜\n" . $add_list)->reply();
+                $weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
+//                $params = [
+//                    'ak' => 'lB3MdI4HADGDT8trntoLxOWR',
+//                    'geotable_id' => 143034,
+//                    'location' => $Location_Y . ',' . $Location_X,
+//                    'radius' => 1500
+//                ];
+//                $rs = \SimpleHttpClient::get('http://api.map.baidu.com/geosearch/v3/nearby', $params);
+//                $data = json_decode($rs, true);
+//                $add_list = '';
+//                \Think\Log::write($rs . 'sss', 'WARN');
+//                foreach ($data['contents'] as $key => $val) {
+//                    $add_list = $add_list . $val['shop_name'] . ":" . $val['address'] . "\n";
+//
+//                }
+//
+//                $weObj->text("发现【" . $data['total'] . "】颗包菜\n" . $add_list)->reply();
                 break;
             default:
                 $weObj->text("help info")->reply();
