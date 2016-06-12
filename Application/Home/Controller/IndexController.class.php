@@ -33,15 +33,14 @@ class IndexController extends Controller
 ////        $this->assign('result',$result);
 ////        $this->display();
 //
-        $options = array(
-            'token' => '1qaz2wsx', //填写你设定的key
-            'encodingaeskey' => 'bMY75kCr4C4tGDtKFNHjZ0I5ZKNDU42DQXAQzxGY5v0', //填写加密用的EncodingAESKey
-//            'appid' => 'wx8e9af23cb8d804e8', //填写高级调用功能的app id 测试
-//            'appsecret' => '3208fc5407922bd7e3327f78febaa6eb' //填写高级调用功能的密钥 测试
+        $options = [
+            'token' => C('WX_TOKEN'), //填写你设定的key
+            'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
+            'appid' => C('WX_APPID'), //填写高级调用功能的app id
+            'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
+        ];
 
-            'appid' => 'wx68b800e79738a452', //填写高级调用功能的app id
-            'appsecret' => '57fb691b606420fe6d9bec9ef5c69274' //填写高级调用功能的密钥
-        );
+        dump($options);
         $weObj = new \Org\Wx\Wechat($options);
         $weObj->valid();
         $type = $weObj->getRev()->getRevType();
