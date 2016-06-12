@@ -68,23 +68,23 @@ class IndexController extends Controller
             case \Org\Wx\Wechat::MSGTYPE_IMAGE:
                 break;
             case \Org\Wx\Wechat::MSGTYPE_LOCATION:
-                $Location_X = $weObj->getRevGeo()['x'];
-                $Location_Y = $weObj->getRevGeo()['y'];
-                //$weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
-                $params = [
-                    'ak' => 'lB3MdI4HADGDT8trntoLxOWR',
-                    'geotable_id' => 143034,
-                    'location' => $Location_Y . ',' . $Location_X,
-                    'radius' => 1500
-                ];
-                $rs = \SimpleHttpClient::get('http://api.map.baidu.com/geosearch/v3/nearby', $params);
-                $data = json_decode($rs, true);
-                $add_list = '';
-                \Think\Log::write($rs . 'sss', 'WARN');
-                foreach ($data['contents'] as $key => $val) {
-                    $add_list = $add_list . $val['shop_name'] . ":" . $val['address'] . "\n";
-
-                }
+//                $Location_X = $weObj->getRevGeo()['x'];
+//                $Location_Y = $weObj->getRevGeo()['y'];
+//                //$weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
+//                $params = [
+//                    'ak' => 'lB3MdI4HADGDT8trntoLxOWR',
+//                    'geotable_id' => 143034,
+//                    'location' => $Location_Y . ',' . $Location_X,
+//                    'radius' => 1500
+//                ];
+//                $rs = \SimpleHttpClient::get('http://api.map.baidu.com/geosearch/v3/nearby', $params);
+//                $data = json_decode($rs, true);
+//                $add_list = '';
+//                \Think\Log::write($rs . 'sss', 'WARN');
+//                foreach ($data['contents'] as $key => $val) {
+//                    $add_list = $add_list . $val['shop_name'] . ":" .    $val['address'] . "\n";
+//
+//                }
 
                 $weObj->text("发现【" . $data['total'] . "】颗包菜\n" . $add_list)->reply();
                 break;
