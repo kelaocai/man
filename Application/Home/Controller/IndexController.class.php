@@ -61,7 +61,7 @@ class IndexController extends Controller
 
                 //$pr_status=sendMail('34206043@qq.com',$usr_info['nickname'].'微信发来信息',$weObj->getRevContent().'<img src='.$usr_info['headimgurl'].' />.');
 
-//                $weObj->text("发送:" . $pr_status)->reply();
+                $weObj->text("发送:" . $pr_status)->reply();
 
 
                 exit;
@@ -74,7 +74,7 @@ class IndexController extends Controller
                 $Geo=$weObj->getRevGeo();
                 $Location_X = $Geo['x'];
                 $Location_Y = $Geo['y'];
-                $weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
+//                $weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
                 $params = [
                     'ak' => 'lB3MdI4HADGDT8trntoLxOWR',
                     'geotable_id' => 143034,
