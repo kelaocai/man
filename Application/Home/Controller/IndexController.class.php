@@ -71,8 +71,9 @@ class IndexController extends Controller
             case \Org\Wx\Wechat::MSGTYPE_IMAGE:
                 break;
             case \Org\Wx\Wechat::MSGTYPE_LOCATION:
-                $Location_X = $weObj->getRevGeo()['x'];
-                $Location_Y = $weObj->getRevGeo()['y'];
+                $Geo=$weObj->getRevGeo();
+                $Location_X = $Geo['x'];
+                $Location_Y = $Geo['y'];
                 //$weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
                 $params = [
                     'ak' => 'lB3MdI4HADGDT8trntoLxOWR',
