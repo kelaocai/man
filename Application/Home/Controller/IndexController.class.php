@@ -36,8 +36,11 @@ class IndexController extends Controller
         $options = array(
             'token' => '1qaz2wsx', //填写你设定的key
             'encodingaeskey' => 'bMY75kCr4C4tGDtKFNHjZ0I5ZKNDU42DQXAQzxGY5v0', //填写加密用的EncodingAESKey
-            'appid' => 'wx8e9af23cb8d804e8', //填写高级调用功能的app id
-            'appsecret' => '3208fc5407922bd7e3327f78febaa6eb' //填写高级调用功能的密钥
+//            'appid' => 'wx8e9af23cb8d804e8', //填写高级调用功能的app id 测试
+//            'appsecret' => '3208fc5407922bd7e3327f78febaa6eb' //填写高级调用功能的密钥 测试
+
+            'appid' => 'wx68b800e79738a452', //填写高级调用功能的app id
+            'appsecret' => '57fb691b606420fe6d9bec9ef5c69274' //填写高级调用功能的密钥
         );
         $weObj = new \Org\Wx\Wechat($options);
         $weObj->valid();
@@ -68,23 +71,23 @@ class IndexController extends Controller
             case \Org\Wx\Wechat::MSGTYPE_IMAGE:
                 break;
             case \Org\Wx\Wechat::MSGTYPE_LOCATION:
-//                $Location_X = $weObj->getRevGeo()['x'];
-//                $Location_Y = $weObj->getRevGeo()['y'];
-//                //$weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
-//                $params = [
-//                    'ak' => 'lB3MdI4HADGDT8trntoLxOWR',
-//                    'geotable_id' => 143034,
-//                    'location' => $Location_Y . ',' . $Location_X,
-//                    'radius' => 1500
-//                ];
-//                $rs = \SimpleHttpClient::get('http://api.map.baidu.com/geosearch/v3/nearby', $params);
-//                $data = json_decode($rs, true);
-//                $add_list = '';
-//                \Think\Log::write($rs . 'sss', 'WARN');
-//                foreach ($data['contents'] as $key => $val) {
-//                    $add_list = $add_list . $val['shop_name'] . ":" .    $val['address'] . "\n";
-//
-//                }
+                $Location_X = $weObj->getRevGeo()['x'];
+                $Location_Y = $weObj->getRevGeo()['y'];
+                //$weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
+                $params = [
+                    'ak' => 'lB3MdI4HADGDT8trntoLxOWR',
+                    'geotable_id' => 143034,
+                    'location' => $Location_Y . ',' . $Location_X,
+                    'radius' => 1500
+                ];
+                $rs = \SimpleHttpClient::get('http://api.map.baidu.com/geosearch/v3/nearby', $params);
+                $data = json_decode($rs, true);
+                $add_list = '';
+                \Think\Log::write($rs . 'sss', 'WARN');
+                foreach ($data['contents'] as $key => $val) {
+                    $add_list = $add_list . $val['shop_name'] . ":" . $val['address'] . "\n";
+
+                }
 
                 $weObj->text("发现【" . $data['total'] . "】颗包菜\n" . $add_list)->reply();
                 break;
