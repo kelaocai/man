@@ -61,7 +61,7 @@ class IndexController extends Controller
 
                 //$pr_status=sendMail('34206043@qq.com',$usr_info['nickname'].'微信发来信息',$weObj->getRevContent().'<img src='.$usr_info['headimgurl'].' />.');
 
-                $weObj->text("发送:" . $pr_status)->reply();
+//                $weObj->text("发送:" . $pr_status)->reply();
 
 
                 exit;
