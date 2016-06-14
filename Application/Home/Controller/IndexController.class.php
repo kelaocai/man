@@ -177,6 +177,10 @@ class IndexController extends Controller
 
     }
 
+    public function plan(){
+        $this->display();
+    }
+
     public function callback()
     {
         Vendor('Kdt.lib.KdtApiOauthClient');
