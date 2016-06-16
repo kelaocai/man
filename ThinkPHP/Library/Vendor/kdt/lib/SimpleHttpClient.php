@@ -3,7 +3,7 @@
  * @require curl-extension
  */
 class SimpleHttpClient {
-	private static $boundary = '';
+	private static $boundary = ''; 
 	
 	public static function get($url, $params) {
 		$url = $url . '?' . http_build_query($params);
