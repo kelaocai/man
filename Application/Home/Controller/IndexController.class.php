@@ -193,7 +193,7 @@ class IndexController extends Controller
     public function plan(){
 //        根据金数据传递的表单序号生成合同
         $data = S('jsj_'.$_GET['serial_number']);
-        \Think\Log::record($data['form_name'],'INFO');
+        \Think\Log::record('cache:'.$data['form_name'],'INFO');
         $this->assign('jsj_data',$data['entry']);
         //计算服务费
         $calc_fw=$data['entry']['field_18']*$data['entry']['field_19'];
