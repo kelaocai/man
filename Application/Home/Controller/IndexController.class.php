@@ -181,7 +181,7 @@ class IndexController extends Controller
 
     public function jsj(){
         $data = json_decode(file_get_contents("php://input"), true);
-        S('jsj_'.$data['entry']['serial_number'], $data, 300);
+        S('jsj_'.$data['entry']['serial_number'], $data, 24*3600*7);
         \Think\Log::record(file_get_contents("php://input"),'INFO');
         $this->display();
     }
