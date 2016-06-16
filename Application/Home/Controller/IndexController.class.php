@@ -240,5 +240,9 @@ class IndexController extends Controller
         }
     }
 
+    public function php(){
+        phpinfo();
+    }
+
 
 }
