@@ -42,7 +42,7 @@ class KdtApiClient {
 		
 		$this->format = $format;
 		
-		return $this;
+		return $this; 
 	}
 	
 	public function setSignMethod($method) {
