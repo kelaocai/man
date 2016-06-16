@@ -187,10 +187,12 @@ class IndexController extends Controller
     }
 
     public function plan_wait(){
-        redirect(U('home/index/plan/?serial_number=1'.$_GET['serial_number']),3,'生成合同中');
+        redirect(U('home/index/plan/?serial_number='.$_GET['serial_number']),3,'生成合同中');
     }
 
     public function plan(){
+        echo $_GET['serial_number'];
+
 //        根据金数据传递的表单序号生成合同
         $data = S('jsj_'.$_GET['serial_number']);
         \Think\Log::record('cache:'.$data['form_name'],'INFO');
