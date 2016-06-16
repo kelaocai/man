@@ -191,7 +191,6 @@ class IndexController extends Controller
     }
 
     public function plan(){
-        echo $_GET['serial_number'];
 
 //        根据金数据传递的表单序号生成合同
         $data = S('jsj_'.$_GET['serial_number']);
