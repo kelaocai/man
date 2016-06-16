@@ -177,7 +177,28 @@ class IndexController extends Controller
 
     }
 
+    public function jsj(){
+        $data = json_decode(file_get_contents("php://input"), true);
+        //
+        S('jsj_'.$data['entry']['serial_number'], $data, 300);
+//        S('jsj_', $data, 300);
+
+        \Think\Log::record(file_get_contents("php://input"),'INFO');
+        $this->display();
+    }
+
+    public function plan_wait(){
+        redirect('http://baocai.vip.natapp.cn/man/?m=home&c=index&a=plan&serial_number='.$_GET['serial_number'],3,'生成合同中');
+    }
+
     public function plan(){
+//        echo $_GET['serial_number'];
+        $data = S('jsj_'.$_GET['serial_number']);
+        \Think\Log::record($data['form_name'],'INFO');
+        //
+        $this->assign('jsj_data',$data);
+        $this->assign('haha',$data['entry']['field_14']);
+
         $this->display();
     }
 

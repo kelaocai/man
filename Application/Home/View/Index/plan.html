@@ -23,7 +23,7 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">
-                企业茶歇合同 </a>
+                企业茶歇合同- {$jsj_data['entry']['field_6']}</a>
         </div>
     </div>
 </nav>
@@ -123,7 +123,8 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td colspan="7">器具确认栏:尊敬的客人,请核对本公司提供给您的配套器具 ,以下部分为本公司为您返场服务时需回收的部分 ,谢谢!如因使用不当导致损 毁,则需按物品原价赔偿
+                        <td colspan="7">器具确认栏:尊敬的客人,请核对本公司提供给您的配套器具 ,以下部分为本公司为您返场服务时需回收的部分 ,谢谢!如因使用不当导致损 毁,则需按物品原价赔偿<br>
+
                         </td>
                     </tr>
 
@@ -136,15 +137,18 @@
                         <th>价格(¥)</th>
                         <th>备注</th>
                     </tr>
+                    <volist name="jsj_data['entry']['field_14']" id="vo">
                     <tr>
                         <th scope="row">{$i}</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
+                        <td>{$vo.name}</td>
+                        <td>件</td>
+                        <td></td>
+                        <td>{$vo.number}</td>
                         <td>@mdo</td>
                         <td>@mdo</td>
                     </tr>
+                    </volist>
+                    <!--<tr><td colspan="7" class="text-right"><h4>原价合计: ¥{$jsj_data['entry']['total_price']}</h4></td></tr>-->
 
                     </tbody>
 
