@@ -34,8 +34,8 @@
         <h1 class="text-center">一颗包菜茶歇服务合同 </h1>
         <div class="col-md-12">
             <h4>甲方:
-                <small>{$jsj_data['field_1']} 代表人:
-                    {$jsj_data['field_36']}  {$jsj_data['field_35']}
+                <small>南山区深南大道与铜鼓路交汇处大冲商务中心D栋1702 代表人:
+                    卓文婷 1351095455
                 </small>
             </h4>
         </div>
@@ -43,7 +43,7 @@
     <div class="row" style="margin-top: 10px;">
         <div class="col-md-12">
             <h4>乙方:
-                <small>代表人:{$jsj_data['field_2']} {$jsj_data['field_6']}</small>
+                <small>深圳包菜餐饮管理有限公司 代表人:吴坷麟 18682100625</small>
             </h4>
         </div>
     </div>
@@ -70,11 +70,11 @@
                 <tbody>
                 <tr>
                     <th scope="row">1</th>
-                    <td>{$jsj_data['field_16']}</td>
-                    <td>{$jsj_data['field_17']}</td>
-                    <td>¥ {$jsj_data['field_18']|default=0}</td>
-                    <td>{$jsj_data['field_19']}</td>
-                    <td>¥ {$calc_fw|default=0}</td>
+                    <td>团建水果切大盒装</td>
+                    <td>盒</td>
+                    <td>¥88</td>
+                    <td>¥5</td>
+                    <td>¥440</td>
                     <td>非含税</td>
                 </tr>
 
@@ -92,42 +92,54 @@
                             <!--杂梅维他水 <br>Very Berry H20+<br>-->
                             <!--超级果昔<br> Super Smoothie-->
 
-                            {$jsj_data['field_8']}
+                            团建水果切/大盒装/3000 ML
+                            数量:5份
                         </p>
                     </td>
-                    <td>{$jsj_data['field_21']}</td>
+                    <td>首次合作客户, 赠送 包菜公仔 1个</td>
 
                 </tr>
                 <tr>
                     <th scope="row"></th>
                     <td colspan="2">现场服务人员</td>
-                    <td></td>
-                    <td>{$jsj_data['field_10']}</td>
-                    <td>¥ {$jsj_data['field_10']|default=0}</td>
+                    <td>¥150/小时</td>
+                    <td>0</td>
+                    <td>¥0</td>
                     <td></td>
                 </tr>
 
                 <tr>
                     <th scope="row"></th>
                     <td colspan="4">服务费(10%)</td>
-                    <td>¥ {$jsj_data['field_11']|default=0}</td>
+                    <td>¥0</td>
                     <td></td>
                 </tr>
                 <tr>
                     <th scope="row"></th>
                     <td colspan="4">发票(5%)</td>
-                    <td>¥ {$jsj_data['field_12']|default=0}</td>
+                    <td>¥0</td>
                     <td>发票抬头：北京嘀嘀无限科技发展有限公司 内容：食品</td>
                 </tr>
                 <tr>
                     <th scope="row"></th>
-                    <td colspan="4">配送费(>5公里按实际费用加收)</td>
-                    <td>¥ {$jsj_data['field_13']|default=0}</td>
+                    <td colspan="4">服务费(10%)</td>
+                    <td>¥0</td>
                     <td></td>
                 </tr>
-
                 <tr>
-                    <td colspan="7">器具确认栏:尊敬的客人,请核对本公司提供给您的配套器具 ,以下部分为本公司为您返场服务时需回收的部分 ,谢谢!如因使用不当导致损 毁,则需按物品原价 (参考价: ¥{$jsj_data['total_price']|default=0} ) 赔偿<br>
+                    <th scope="row"></th>
+                    <td colspan="4">配送费(>5公里按实际费用加收)</td>
+                    <td>¥0</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                    <td colspan="3">小计: ¥440 (肆佰肆拾贰元整) <br>
+                    </td>
+                    <td colspan="1"></td>
+                </tr>
+                <tr>
+                    <td colspan="7">器具确认栏:尊敬的客人,请核对本公司提供给您的配套器具 ,以下部分为本公司为您返场服务时需回收的部分 ,谢谢!如因使用不当导致损 毁,则需按物品原价赔偿<br>
 
                     </td>
                 </tr>
@@ -136,20 +148,20 @@
                     <th>序号</th>
                     <th>提供物料</th>
                     <th>单位</th>
-                    <!--<th>单价(¥)</th>-->
+                    <th>单价(¥)</th>
                     <th>数量</th>
-                    <!--<th>价格(¥)</th>-->
-                    <th colspan="4">备注</th>
+                    <th>价格(¥)</th>
+                    <th>备注</th>
                 </tr>
-                <volist name="jsj_data['field_14']" id="vo">
+                <volist name="jsj_data['entry']['field_14']" id="vo">
                     <tr>
                         <th scope="row">{$i}</th>
                         <td>{$vo.name}</td>
                         <td>件</td>
-                        <!--<td></td>-->
+                        <td></td>
                         <td>{$vo.number}</td>
-                        <!--<td></td>-->
-                        <td colspan="3"></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 </volist>
                 <!--<tr><td colspan="7" class="text-right"><h4>原价合计: ¥{$jsj_data['entry']['total_price']}</h4></td></tr>-->
@@ -172,28 +184,39 @@
                 <tr>
                     <td rowspan="2"><h5>主要订餐事项</h5></td>
                     <td width="150px;">用餐时间</td>
-                    <td>{$jsj_data['field_26']}--{$jsj_data['field_27']}</td>
+                    <td>2016 年06月17日15时30分</td>
                 </tr>
                 <tr>
                     <td> 用餐地址</td>
-                    <td>{$jsj_data['field_25']['street']} 联系人:{$jsj_data['field_36']} | {$jsj_data['field_35']} </td>
+                    <td>南山区深南大道与铜鼓路交汇处大冲商务中心D栋1702 卓文婷 13510954553</td>
                 </tr>
                 <tr>
                     <td rowspan="3"><h5>餐费支付</h5></td>
-                    <td>合同全款</td>
-                    <td><h4>¥ {$calc_total|default=0} </h4></td>
+                    <td>餐费全款</td>
+                    <td><h4>¥440 (肆佰肆拾贰元整)</h4></td>
 
                 </tr>
                 <tr>
                     <td>已付定金</td>
-                    <td>¥ {$jsj_data['field_33']|default=0} </td>
+                    <td>¥100 (壹佰元整)</td>
 
                 </tr>
 
                 <tr>
                     <td>结算方式</td>
                     <td>
-                        {$jsj_data['field_34']|default='其它'}
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="">
+                                现金
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="" checked>
+                                其它 (支付宝)
+                            </label>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -283,7 +306,7 @@
                             <td><h4>订餐人(甲方)签章:</h4></td>
                         </tr>
                         <tr>
-                            <td>联系地址:{$jsj_data['field_25']['street']}</td>
+                            <td>联系地址:南山区深南大道与铜鼓路交汇处大冲商务中心D栋1702</td>
                         </tr>
 
                     </table>

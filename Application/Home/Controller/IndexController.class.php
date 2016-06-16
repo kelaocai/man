@@ -108,20 +108,22 @@ class IndexController extends Controller
     {
 
 //        S('wx_$access_token',null);
-        $access_token = $this->getWxtoken();
-        $client = new \KdtApiOauthClient();
-        $method = 'kdt.trades.sold.get';
-        $params = [
-            'page_size' => 50
-        ];
-
-        $rs = $client->get($access_token, $method, $params);
-        foreach ($rs as $key => $val) {
-            foreach ($val['trades'] as $key2 => $val2) {
-                echo ($val2['title'] . '--' . $val2['buyer_nick']) . '<br>' . '<br>';
-            }
-
-        }
+//        $access_token = $this->getWxtoken();
+//        $client = new \KdtApiOauthClient();
+//        $method = 'kdt.trades.sold.get';
+//        $params = [
+//            'page_size' => 50
+//        ];
+//
+//        $rs = $client->get($access_token, $method, $params);
+//        foreach ($rs as $key => $val) {
+//            foreach ($val['trades'] as $key2 => $val2) {
+//                echo ($val2['title'] . '--' . $val2['buyer_nick']) . '<br>' . '<br>';
+//            }
+//
+//        }
+        $num=23.55;
+        echo  U('home/index/plan/?serial_number=1');
 
     }
 
@@ -179,25 +181,26 @@ class IndexController extends Controller
 
     public function jsj(){
         $data = json_decode(file_get_contents("php://input"), true);
-        //
         S('jsj_'.$data['entry']['serial_number'], $data, 300);
-//        S('jsj_', $data, 300);
-
         \Think\Log::record(file_get_contents("php://input"),'INFO');
         $this->display();
     }
 
     public function plan_wait(){
-        redirect('http://baocai.vip.natapp.cn/man/?m=home&c=index&a=plan&serial_number='.$_GET['serial_number'],3,'生成合同中');
+        redirect(U('home/index/plan/?serial_number=1'.$_GET['serial_number']),3,'生成合同中');
     }
 
     public function plan(){
-//        echo $_GET['serial_number'];
+//        根据金数据传递的表单序号生成合同
         $data = S('jsj_'.$_GET['serial_number']);
         \Think\Log::record($data['form_name'],'INFO');
-        //
-        $this->assign('jsj_data',$data);
-        $this->assign('haha',$data['entry']['field_14']);
+        $this->assign('jsj_data',$data['entry']);
+        //计算服务费
+        $calc_fw=$data['entry']['field_18']*$data['entry']['field_19'];
+        $this->assign('calc_fw',$calc_fw." (".\Org\Util\Num2Cny::ParseNumber($calc_fw).")");
+        //计算服务费
+        $calc_total=$calc_fw+$data['entry']['field_10']+$data['entry']['field_11']+$data['entry']['field_12']+$data['entry']['field_13'];
+        $this->assign('calc_total',$calc_total." (".\Org\Util\Num2Cny::ParseNumber($calc_total).")");
 
         $this->display();
     }
