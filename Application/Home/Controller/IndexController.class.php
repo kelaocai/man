@@ -27,7 +27,7 @@ class IndexController extends Controller
 
         $list = $client->get($access_token, $method, $params);
 //        dump($list);
-        $this->assign('list',$list["response"]['trades']);
+        $this->assign('list', $list["response"]['trades']);
         $this->display();
     }
 
@@ -122,8 +122,11 @@ class IndexController extends Controller
 //            }
 //
 //        }
-        $num=23.55;
-        echo  U('home/index/plan/?serial_number=1');
+        $num = 23.55;
+//        echo U('home/index/plan/?serial_number=1');
+        $handle = \printer_open();
+        printer_write($handle, "Text to print");
+        printer_close($handle);
 
     }
 
@@ -179,29 +182,32 @@ class IndexController extends Controller
 
     }
 
-    public function jsj(){
+    public function jsj()
+    {
         $data = json_decode(file_get_contents("php://input"), true);
-        S('jsj_'.$data['entry']['serial_number'], $data, 24*3600*7);
-        \Think\Log::record(file_get_contents("php://input"),'INFO');
+        S('jsj_' . $data['entry']['serial_number'], $data, 24 * 3600 * 7);
+        \Think\Log::record(file_get_contents("php://input"), 'INFO');
         $this->display();
     }
 
-    public function plan_wait(){
-        redirect(U('home/index/plan/?serial_number='.$_GET['serial_number']),3,'生成合同中');
+    public function plan_wait()
+    {
+        redirect(U('home/index/plan/?serial_number=' . $_GET['serial_number']), 3, '生成合同中');
     }
 
-    public function plan(){
+    public function plan()
+    {
 
 //        根据金数据传递的表单序号生成合同
-        $data = S('jsj_'.$_GET['serial_number']);
-        \Think\Log::record('cache:'.$data['form_name'],'INFO');
-        $this->assign('jsj_data',$data['entry']);
+        $data = S('jsj_' . $_GET['serial_number']);
+        \Think\Log::record('cache:' . $data['form_name'], 'INFO');
+        $this->assign('jsj_data', $data['entry']);
         //计算服务费
-        $calc_fw=$data['entry']['field_18']*$data['entry']['field_19'];
-        $this->assign('calc_fw',$calc_fw." (".\Org\Util\Num2Cny::ParseNumber($calc_fw).")");
+        $calc_fw = $data['entry']['field_18'] * $data['entry']['field_19'];
+        $this->assign('calc_fw', $calc_fw . " (" . \Org\Util\Num2Cny::ParseNumber($calc_fw) . ")");
         //计算服务费
-        $calc_total=$calc_fw+$data['entry']['field_10']+$data['entry']['field_11']+$data['entry']['field_12']+$data['entry']['field_13'];
-        $this->assign('calc_total',$calc_total." (".\Org\Util\Num2Cny::ParseNumber($calc_total).")");
+        $calc_total = $calc_fw + $data['entry']['field_10'] + $data['entry']['field_11'] + $data['entry']['field_12'] + $data['entry']['field_13'];
+        $this->assign('calc_total', $calc_total . " (" . \Org\Util\Num2Cny::ParseNumber($calc_total) . ")");
 
         $this->display();
     }
@@ -244,8 +250,60 @@ class IndexController extends Controller
         }
     }
 
-    public function php(){
-        phpinfo();
+    public function map()
+    {
+//        $url = "http://api.map.baidu.com/geodata/v3/geotable/list";
+        $url = "http://api.map.baidu.com/geodata/v3/poi/list";
+        $params = array('geotable_id' => 143034,
+            'ak'=>'NLBwYBHxe2AIx7YPmaAQenG5',
+            'sn'=>''
+        );
+
+//        $rs = \SimpleHttpClient::get($url, $params);
+//        $data = json_decode($rs, true);
+//        dump($data);
+        $this->assign('post_url',U('home/index/createShop'));
+        $this->display();
+
+    }
+    
+    public function getPoint(){
+//        $url = "http://api.map.baidu.com/geodata/v3/geotable/list";
+        $url = "http://api.map.baidu.com/geosearch/v3/local";
+        $params = array('geotable_id' => 143034,
+            'ak'=>C('BAIDU_MAP_AK'),
+            'sn'=>'',
+            'page_size'=>50
+        );
+        $rs = \SimpleHttpClient::get($url, $params);
+        $data = json_decode($rs, true);
+        $this->ajaxReturn($data);
+    }
+
+    public function createShop(){
+//        echo 'shop';
+        $latitude=$_POST['lat'];
+        $longitude=$_POST['lng'];
+        $title=$_POST['shop_title'];
+
+        $url="http://api.map.baidu.com/geodata/v3/poi/create";
+        $params=array(
+            'geotable_id' => 143034,
+            'coord_type'=>3,
+            'ak'=>'NLBwYBHxe2AIx7YPmaAQenG5',
+            'latitude'=>$latitude,
+            'longitude'=>$longitude,
+            'title'=>$title
+        );
+        $rs = \SimpleHttpClient::post($url, $params);
+        $data = json_decode($rs, true);
+        redirect(U('home/index/map'));
+    }
+
+    public function ip(){
+        \Think\Log::write('ip:'.I('get.ip',0));
+        $pr_status=sendMail('34206043@qq.com','RasPi上线了',"the ip is :".I('get.ip',0));
+        echo "the ip is :".I('get.ip',0).",mail_status:".$pr_status;
     }
 
 

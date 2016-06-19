@@ -16,7 +16,9 @@ return array(
 //    'WX_APPID'=>'wx68b800e79738a452',//生产
 //    'WX_APPSECRET'=>'57fb691b606420fe6d9bec9ef5c69274'//生产
     'WX_APPID' => 'wx8e9af23cb8d804e8',//测试
-    'WX_APPSECRET' => '3208fc5407922bd7e3327f78febaa6eb'//测试
+    'WX_APPSECRET' => '3208fc5407922bd7e3327f78febaa6eb',//测试
+
+    'BAIDU_MAP_AK'=>'NLBwYBHxe2AIx7YPmaAQenG5'
 
 
 );
