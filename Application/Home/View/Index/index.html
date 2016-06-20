@@ -9,6 +9,7 @@
 
     <!-- Bootstrap -->
     <link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Public/css/jumbotron-narrow.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,79 +20,52 @@
 </head>
 <body>
 
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-                <span class="glyphicon glyphicon-signal" aria-hidden="true"></span>
-            </a>
+
+
+<div class="container" style="max-width: 730px;">
+    <div class="header clearfix">
+        <!--<nav>-->
+            <!--<ul class="nav nav-pills pull-right">-->
+                <!--<li role="presentation" class="active"><a href="#">Home</a></li>-->
+                <!--<li role="presentation"><a href="#">About</a></li>-->
+                <!--<li role="presentation"><a href="#">Contact</a></li>-->
+            <!--</ul>-->
+        <!--</nav>-->
+        <img src="Public/logo200.png" alt="..." class="img img-responsive" >
+    </div>
+    <div class="jumbotron">
+        <!--<h1>办公室里的饕餮时光</h1>-->
+        <p class="lead"><img src="Public/top.png" alt="..." class="img img-responsive" ></p>
+        <p><a class="btn btn-lg btn-success" href="#" role="button">马 上 预 定</a></p>
+    </div>
+
+    <div class="row marketing">
+        <div class="col-lg-6">
+            <h4>Subheading</h4>
+            <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+            <h4>Subheading</h4>
+            <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+            <h4>Subheading</h4>
+            <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+
+        <div class="col-lg-6">
+            <h4>Subheading</h4>
+            <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+            <h4>Subheading</h4>
+            <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+            <h4>Subheading</h4>
+            <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
         </div>
     </div>
-</nav>
 
-<div class="container">
-
-    <div class="starter-template">
-        <h1>销售数据汇总</h1>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">店铺名称</h3>
-            </div>
-            <div class="panel-body">
-                2016年5月
-                <!-- Table -->
-                <table class="table table-condensed">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>商品</th>
-                        <th>价格</th>
-                        <th>购买人</th>
-                        <th>打印小票</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    <volist name="list" id="vo">
-                        <tr>
-                            <th scope="row">{$i}</th>
-                            <td style="width: 30%">{$vo.title|mb_substr=0,20}</td>
-                            <td>{$vo.payment}</td>
-                            <td>{$vo.buyer_nick}</td>
-                            <td>
-                                <button type="button" class="btn btn-default btn-sm" data-toggle="modal"
-                                        data-target=".bs-example-modal-sm">print
-                                </button>
-                            </td>
-                        </tr>
-                    </volist>
-
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Small modal -->
-
-
-        <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content container" >
-                    <div class="panel panel-default" style="margin-top: 10px;">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Tips</h3>
-                        </div>
-                        <div class="panel-body">
-                            <h3 class="panel-title">打印完毕!</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
+    <footer class="footer">
+        <p>© Company 2016</p>
+    </footer>
 
 </div><!-- /.container -->
 

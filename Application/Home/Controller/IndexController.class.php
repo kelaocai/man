@@ -18,16 +18,18 @@ class IndexController extends Controller
     public function index()
 
     {
-        $access_token = $this->getWxtoken();
-        $client = new \KdtApiOauthClient();
-        $method = 'kdt.trades.sold.get';
-        $params = [
-            'page_size' => 50
-        ];
+//        $access_token = $this->getWxtoken();
+//        $client = new \KdtApiOauthClient();
+//        $method = 'kdt.trades.sold.get';
+//        $params = [
+//            'page_size' => 50
+//        ];
+//
+//        $list = $client->get($access_token, $method, $params);
+////        dump($list);
+//        $this->assign('list', $list["response"]['trades']);
+        
 
-        $list = $client->get($access_token, $method, $params);
-//        dump($list);
-        $this->assign('list', $list["response"]['trades']);
         $this->display();
     }
 
