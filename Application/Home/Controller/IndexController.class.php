@@ -88,8 +88,8 @@ class IndexController extends Controller
                 $add_list = '';
                 \Think\Log::write($rs . 'sss', 'WARN');
                 foreach ($data['contents'] as $key => $val) {
-//                    $add_list = $add_list . $val['shop_name'] . ":" . $val['address'] . "\n";
-                    $add_list = $add_list . $val['address'] . "\n";
+                    $add_list = $add_list . $val['shop_name'] . ":" . $val['address'] . "\n";
+//                    $add_list = $add_list . $val['address'] . "\n";
 
                 }
 
