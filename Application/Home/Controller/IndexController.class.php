@@ -88,7 +88,8 @@ class IndexController extends Controller
                 $add_list = '';
                 \Think\Log::write($rs . 'sss', 'WARN');
                 foreach ($data['contents'] as $key => $val) {
-                    $add_list = $add_list . $val['shop_name'] . ":" . $val['address'] . "\n";
+//                    $add_list = $add_list . $val['shop_name'] . ":" . $val['address'] . "\n";
+                    $add_list = $add_list . $val['address'] . "\n";
 
                 }
 
@@ -286,7 +287,8 @@ class IndexController extends Controller
 //        echo 'shop';
         $latitude=$_POST['lat'];
         $longitude=$_POST['lng'];
-        $title=$_POST['shop_title'];
+        $shop_name=$_POST['shop_name'];
+        $address=$_POST['shop_address'];
 
         $url="http://api.map.baidu.com/geodata/v3/poi/create";
         $params=array(
@@ -295,7 +297,9 @@ class IndexController extends Controller
             'ak'=>'NLBwYBHxe2AIx7YPmaAQenG5',
             'latitude'=>$latitude,
             'longitude'=>$longitude,
-            'title'=>$title
+            'shop_name'=>$shop_name,
+            'title'=>$shop_name,
+            'address'=>$address
         );
         $rs = \SimpleHttpClient::post($url, $params);
         $data = json_decode($rs, true);

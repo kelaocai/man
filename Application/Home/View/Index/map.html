@@ -10,10 +10,11 @@
             margin: 0;
             font-family: "微软雅黑";
             font-size: 14px;
+            margin-top: 20px;
         }
 
         #l-map {
-            height: 300px;
+            height: 200px;
             width: 100%;
         }
 
@@ -21,26 +22,62 @@
             width: 100%;
         }
     </style>
+    <!-- Bootstrap -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=lB3MdI4HADGDT8trntoLxOWR"></script>
-    <title>关键字输入提示词条</title>
+    <title>包菜小站地图</title>
 </head>
 <body>
 
-<form action="{$post_url}" method="post">
+<div class="container">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">包菜小站地图</div>
+        <div class="panel-body">
+            <div id="l-map"></div>
+            <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+        </div>
+    </div>
+
+    <form action="{$post_url}" method="post">
 
 
-    <div id="l-map"></div>
-    <div id="r-result">请输入:<input type="text" id="suggestId" size="20" value="百度" style="width:150px;"/></div>
-    <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+        <div id="r-result form-group">
+            <label for="suggestId">地址</label>
+            <input type="text" class="form-control"  id="suggestId" size="20" value="百度"  name="shop_address"/>
+        </div>
 
-    post_url:{$post_url}<br>
-    <input name="lng" value="22" id="p_lgn"/><br>
-    <input name="lat" value="11" id="p_lat"/>
-    <input name="shop_title" value="11" id="s_shop_title"/>
-    <input type="submit" value="create">
-    <input type="button" value="show" id="button">
 
-</form>
+        <!--post_url:{$post_url}<br>-->
+        <input name="lng" value="22" id="p_lgn" type="hidden" />
+        <input name="lat" value="11" id="p_lat" type="hidden" />
+        <!--<div class="form-group">-->
+            <!--<label for="s_shop_title">地址</label>-->
+            <!--<input type="email" class="form-control" id="s_shop_title" placeholder="地址" name="shop_title">-->
+        <!--</div>-->
+        <div class="form-group">
+            <label for="s_shop_name">店名</label>
+            <input type="text" class="form-control" id="s_shop_name" placeholder="" name="shop_name">
+            <!--<input type="hidden" class="form-control" id="s_shop_address" placeholder="" name="shop_address">-->
+        </div>
+        <input type="submit" value="提交申请" class="btn btn-primary btn-lg btn-block btn-success">
+        <img src="Public/top.png" alt="..." class="img img-responsive" >
+        <!--<input type="button" value="show" id="button">-->
+
+    </form>
+
+
+</div>
+
+
+
 </body>
 </html>
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
@@ -57,7 +94,7 @@
         map.centerAndZoom("深圳", 12);                   // 初始化地图,设置城市和地图级别。
 
         // 编写自定义函数,创建标注
-        function addMarker(point,label) {
+        function addMarker(point, label) {
 //            var myIcon = new BMap.Icon("/man/Public/bcz.png", new BMap.Size(26, 30));
 //            var marker = new BMap.Marker(point, {icon: myIcon});
             var marker = new BMap.Marker(point);
@@ -87,7 +124,7 @@
 //                alert("JSON Data: " + data.contents[0].location[0]);
                 for (var i = 0; i < data.size; i++) {
                     var point = new BMap.Point(data.contents[i].location[0], data.contents[i].location[1]);
-                    addMarker(point,data.contents[i]['title']);
+                    addMarker(point, data.contents[i]['title']);
                 }
 
             });
@@ -121,7 +158,7 @@
             }
             str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
             G("searchResultPanel").innerHTML = str;
-            G("s_shop_title").value = value;
+            G("s_shop_address").value = value;
 
 
         });
