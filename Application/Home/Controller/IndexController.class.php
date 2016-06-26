@@ -104,7 +104,20 @@ class IndexController extends Controller
 
     public function fy()
     {
-        testSendFormatedMessage();
+//        testSendFormatedMessage();
+        $msgNo = time()+1;
+        $msgInfo = array (
+            'memberCode'=>MEMBER_CODE,
+            'customerName'=>'卓文婷',
+            'customerPhone'=>'13510954553',
+            'customerAddress'=>'南山区深南大道与铜鼓路交汇处大冲商务中心D栋1702',
+            'customerMemo'=>'5份88元果切',
+            'msgDetail'=>'水果切拼盘@8800@5',
+            'deviceNo'=>DEVICE_NO,
+            'msgNo'=>$msgNo,
+        );
+
+        echo sendFormatedMessage($msgInfo);
     }
 
     public function test()
