@@ -9,8 +9,8 @@ include 'HttpClient.class.php';
 //@ DEVICE_NO：打印机设备编码，通过打印机后面的激活按键获取，为16位数字，例如"4600365507768327";
 define('MEMBER_CODE', '266fdd5444a811e5a6bd52540008b6e6');
 define('FEYIN_KEY', '2fb3c6e7');
-define('DEVICE_NO', '9982172973682014');//测试
-//define('DEVICE_NO', '4600042606700803');//科兴旗舰店
+//define('DEVICE_NO', '9982172973682014');//测试
+define('DEVICE_NO', '4600042606700803');//科兴旗舰店
 
 
 
