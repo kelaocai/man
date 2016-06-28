@@ -211,7 +211,7 @@ class IndexController extends Controller
         //计算服务费
         $calc_total = $calc_fw + $data['entry']['field_10'] + $data['entry']['field_11'] + $data['entry']['field_12'] + $data['entry']['field_13'];
         $this->assign('calc_total', $calc_total . " (" . \Org\Util\Num2Cny::ParseNumber($calc_total) . ")");
-
+        $this->assign('today',date("Y-m-d"));
         $this->display();
     }
 

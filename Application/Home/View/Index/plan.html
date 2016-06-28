@@ -43,7 +43,7 @@
     <div class="row" style="margin-top: 10px;">
         <div class="col-md-12">
             <h4>乙方:
-                <small>代表人:{$jsj_data['field_2']} {$jsj_data['field_6']}</small>
+                <small>{$jsj_data['field_2']} 代表人: {$jsj_data['field_6']}</small>
             </h4>
         </div>
     </div>
@@ -117,7 +117,7 @@
                     <th scope="row"></th>
                     <td colspan="4">发票(5%)</td>
                     <td>¥ {$jsj_data['field_12']|default=0}</td>
-                    <td>发票抬头：北京嘀嘀无限科技发展有限公司 内容：食品</td>
+                    <td>发票抬头：{$jsj_data['field_28']}<br> 内容：{$jsj_data['field_29']}</td>
                 </tr>
                 <tr>
                     <th scope="row"></th>
@@ -303,7 +303,7 @@
             </div>
 
             <div class="row">
-                <p><h5 class="text-right" style="margin: 10px;">2016年6月16日</h5></p>
+                <p><h5 class="text-right" style="margin: 10px;">{$today}</h5></p>
             </div>
 
 
