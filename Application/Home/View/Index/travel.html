@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <style type="text/css">
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: "微软雅黑";
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        #allmap, #searchmap {
+            height: 300px;
+            width: 100%;
+        }
+
+        #r-result {
+            width: 100%;
+        }
+    </style>
+    <!-- Bootstrap -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=lB3MdI4HADGDT8trntoLxOWR"></script>
+    <title>献给FN</title>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">旅游地图</div>
+        <div class="panel-body">
+            <br>
+            <div id="searchmap"></div>
+            <br>
+            <div id="r-result">起点:<input type="text" id="suggestId" size="20" value="" style="width:150px;"/></div>
+            <br>
+            <div id="r-result2">终点:<input type="text" id="suggestId2" size="20" value="" style="width:150px;"/></div>
+            <br>
+            <input type="button" value="增加" id="button">
+            <input type="button" value="下一站" id="next">
+
+        </div>
+
+        <div id="allmap"></div>
+
+
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+</html>
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+
+
+        // 百度地图API功能
+        var map = new BMap.Map("allmap");
+        var search_map = new BMap.Map("searchmap");
+        var start = "翰岭院";
+        var end = "泗洪人民医院";
+        map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);
+        search_map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);
+        //三种驾车策略：最少时间，最短距离，避开高速
+        var routePolicy = [BMAP_DRIVING_POLICY_LEAST_TIME, BMAP_DRIVING_POLICY_LEAST_DISTANCE, BMAP_DRIVING_POLICY_AVOID_HIGHWAYS];
+        map.clearOverlays();
+        map.setZoom(30);
+        map.enableKeyboard();
+//        var i=$("#driving_way select").val();
+//        search("深圳", "北京", BMAP_DRIVING_POLICY_LEAST_DISTANCE);
+//        search("北京", "乌兰浩特", BMAP_DRIVING_POLICY_LEAST_DISTANCE);
+//        search("乌兰浩特","乌兰浩特阿尔山",BMAP_DRIVING_POLICY_LEAST_DISTANCE);
+//        search("阿尔山五里泉","阿尔山伊尔施镇",BMAP_DRIVING_POLICY_LEAST_DISTANCE);
+//        search("阿尔山伊尔施镇","阿尔山森林公园",BMAP_DRIVING_POLICY_LEAST_DISTANCE);
+//        search("阿尔山森林公园","阿尔山哈拉哈河",BMAP_DRIVING_POLICY_LEAST_DISTANCE);
+
+        function search(start, end, route) {
+            var driving = new BMap.DrivingRoute(map, {renderOptions: {map: map, autoViewport: true}, policy: route});
+            driving.search(start, end);
+        }
+
+
+        var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+                {
+                    "input": "suggestId"
+                    , "location": search_map
+                });
+
+        var ac2 = new BMap.Autocomplete(    //建立一个自动完成的对象
+                {
+                    "input": "suggestId2"
+                    , "location": search_map
+                });
+
+        ac.addEventListener("onhighlight", function (e) {  //鼠标放在下拉列表上的事件
+            var str = "";
+            var _value = e.fromitem.value;
+            var value = "";
+            if (e.fromitem.index > -1) {
+                value = _value.province + _value.city + _value.district + _value.street + _value.business;
+            }
+            str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+            value = "";
+            if (e.toitem.index > -1) {
+                _value = e.toitem.value;
+                value = _value.province + _value.city + _value.district + _value.street + _value.business;
+            }
+            str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+//            G("searchResultPanel").innerHTML = str;
+
+        });
+
+        ac2.addEventListener("onhighlight", function (e) {  //鼠标放在下拉列表上的事件
+            var str = "";
+            var _value = e.fromitem.value;
+            var value = "";
+            if (e.fromitem.index > -1) {
+                value = _value.province + _value.city + _value.district + _value.street + _value.business;
+            }
+            str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+            value = "";
+            if (e.toitem.index > -1) {
+                _value = e.toitem.value;
+                value = _value.province + _value.city + _value.district + _value.street + _value.business;
+            }
+
+
+        });
+
+
+        var myValue;
+        ac.addEventListener("onconfirm", function (e) {    //鼠标点击下拉列表后的事件
+            var _value = e.item.value;
+            myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+//            G("searchResultPanel").innerHTML = "onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+
+            setPlace();
+        });
+
+        ac2.addEventListener("onconfirm", function (e) {    //鼠标点击下拉列表后的事件
+            var _value = e.item.value;
+            myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+//            G("searchResultPanel").innerHTML = "onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+
+            setPlace();
+        });
+
+        function setPlace() {
+            search_map.clearOverlays();    //清除地图上所有覆盖物
+            function myFun() {
+                var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+
+                search_map.centerAndZoom(pp, 18);
+                var mk = new BMap.Marker(pp);
+                mk.enableDragging();
+                search_map.addOverlay(mk);    //添加标注
+            }
+
+            var local = new BMap.LocalSearch(search_map, { //智能搜索
+                onSearchComplete: myFun
+            });
+            local.search(myValue);
+        }
+
+
+        $("#button").click(function () {
+            search($("#suggestId").val(),$("#suggestId2").val(),null);
+        });
+
+        $("#next").click(function () {
+
+            $("#suggestId").val($("#suggestId2").val());
+            $("#suggestId2").val("")
+        });
+    });
+</script>
+

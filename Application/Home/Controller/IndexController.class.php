@@ -127,9 +127,10 @@ class IndexController extends Controller
 //        }
         $num = 23.55;
 //        echo U('home/index/plan/?serial_number=1');
-        $handle = \printer_open();
-        printer_write($handle, "Text to print");
-        printer_close($handle);
+//        $handle = \printer_open();
+//        printer_write($handle, "Text to print");
+//        printer_close($handle);
+        echo date("Y-m-d");
 
     }
 
@@ -211,6 +212,7 @@ class IndexController extends Controller
         //计算服务费
         $calc_total = $calc_fw + $data['entry']['field_10'] + $data['entry']['field_11'] + $data['entry']['field_12'] + $data['entry']['field_13'];
         $this->assign('calc_total', $calc_total . " (" . \Org\Util\Num2Cny::ParseNumber($calc_total) . ")");
+        $this->assign('today',date("Y-m-d"));
 
         $this->display();
     }
@@ -310,6 +312,10 @@ class IndexController extends Controller
         \Think\Log::write('ip:'.I('get.ip',0));
         $pr_status=sendMail('34206043@qq.com','RasPi上线了',"the ip is :".I('get.ip',0));
         echo "the ip is :".I('get.ip',0).",mail_status:".$pr_status;
+    }
+
+    public function travel(){
+        $this->display();
     }
 
 
