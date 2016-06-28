@@ -104,20 +104,7 @@ class IndexController extends Controller
 
     public function fy()
     {
-//        testSendFormatedMessage();
-        $msgNo = time()+1;
-        $msgInfo = array (
-            'memberCode'=>MEMBER_CODE,
-            'customerName'=>'卓文婷',
-            'customerPhone'=>'13510954553',
-            'customerAddress'=>'南山区深南大道与铜鼓路交汇处大冲商务中心D栋1702',
-            'customerMemo'=>'5份88元果切',
-            'msgDetail'=>'水果切拼盘@8800@5',
-            'deviceNo'=>DEVICE_NO,
-            'msgNo'=>$msgNo,
-        );
-
-        echo sendFormatedMessage($msgInfo);
+        testSendFormatedMessage();
     }
 
     public function test()
@@ -140,10 +127,9 @@ class IndexController extends Controller
 //        }
         $num = 23.55;
 //        echo U('home/index/plan/?serial_number=1');
-//        $handle = \printer_open();
-//        printer_write($handle, "Text to print");
-//        printer_close($handle);
-        echo date("Y-m-d");
+        $handle = \printer_open();
+        printer_write($handle, "Text to print");
+        printer_close($handle);
 
     }
 
@@ -225,7 +211,6 @@ class IndexController extends Controller
         //计算服务费
         $calc_total = $calc_fw + $data['entry']['field_10'] + $data['entry']['field_11'] + $data['entry']['field_12'] + $data['entry']['field_13'];
         $this->assign('calc_total', $calc_total . " (" . \Org\Util\Num2Cny::ParseNumber($calc_total) . ")");
-        $this->assign('today',date("Y-m-d"));
 
         $this->display();
     }
