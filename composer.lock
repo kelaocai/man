@@ -4,30 +4,36 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d9739c2466502a51c0d4b9a9f762c376",
-    "content-hash": "426d180faea6521f065ffe8d2b44d00c",
+    "hash": "f55f25b0df3ce763c92468a545bf88f8",
+    "content-hash": "73f890e70aa8405af1d51a1d88bb3165",
     "packages": [
         {
-            "name": "twbs/bootstrap",
+            "name": "pingplusplus/pingpp-php",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "7c86bc9664ddc3a1965fe91d7a0db97eb9348448"
+                "url": "https://github.com/PingPlusPlus/pingpp-php.git",
+                "reference": "737c53c8b4ec887a1f953f286e0b178e074ef30f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/twbs/bootstrap/7c86bc9664ddc3a1965fe91d7a0db97eb9348448.zip",
-                "reference": "7c86bc9664ddc3a1965fe91d7a0db97eb9348448",
+                "url": "https://packagist.phpcomposer.com/files/PingPlusPlus/pingpp-php/737c53c8b4ec887a1f953f286e0b178e074ef30f.zip",
+                "reference": "737c53c8b4ec887a1f953f286e0b178e074ef30f",
                 "shasum": ""
             },
-            "replace": {
-                "twitter/bootstrap": "self.version"
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.3.3"
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "3.3.x-dev"
+                "branch-alias": []
+            },
+            "autoload": {
+                "psr-4": {
+                    "Pingpp\\": "lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -36,33 +42,26 @@
             ],
             "authors": [
                 {
-                    "name": "Jacob Thornton",
-                    "email": "jacobthornton@gmail.com"
-                },
-                {
-                    "name": "Mark Otto",
-                    "email": "markdotto@gmail.com"
+                    "name": "Pingplusplus and contributors",
+                    "homepage": "https://github.com/PingPlusPlus/pingpp-php/contributors"
                 }
             ],
-            "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
-            "homepage": "http://getbootstrap.com",
+            "description": "Pingplusplus PHP Library",
+            "homepage": "https://pingxx.com/",
             "keywords": [
-                "JS",
-                "css",
-                "framework",
-                "front-end",
-                "less",
-                "mobile-first",
-                "responsive",
-                "web"
+                "api",
+                "mobile payment processing",
+                "pingpp"
             ],
-            "time": "2016-06-08 06:50:38"
+            "time": "2016-05-31 05:26:59"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "pingplusplus/pingpp-php": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

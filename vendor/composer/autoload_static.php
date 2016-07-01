@@ -6,9 +6,25 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit1eecce8fe11ed3e8feb1f3e99f25e9c9
 {
+    public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'Pingpp\\' => 7,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Pingpp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pingplusplus/pingpp-php/lib',
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1eecce8fe11ed3e8feb1f3e99f25e9c9::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1eecce8fe11ed3e8feb1f3e99f25e9c9::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

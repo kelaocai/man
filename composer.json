@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "twbs/bootstrap": "^3.3"
+        "pingplusplus/pingpp-php": "dev-master"
     },
     "minimum-stability": "dev",
     "repositories": {
