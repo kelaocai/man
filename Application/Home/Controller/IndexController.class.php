@@ -28,7 +28,7 @@ class IndexController extends Controller
 //        $list = $client->get($access_token, $method, $params);
 ////        dump($list);
 //        $this->assign('list', $list["response"]['trades']);
-        
+
 
         $this->display();
     }
@@ -211,7 +211,7 @@ class IndexController extends Controller
         //计算服务费
         $calc_total = $calc_fw + $data['entry']['field_10'] + $data['entry']['field_11'] + $data['entry']['field_12'] + $data['entry']['field_13'];
         $this->assign('calc_total', $calc_total . " (" . \Org\Util\Num2Cny::ParseNumber($calc_total) . ")");
-        $this->assign('today',date("Y-m-d"));
+        $this->assign('today', date("Y-m-d"));
         $this->display();
     }
 
@@ -258,62 +258,93 @@ class IndexController extends Controller
 //        $url = "http://api.map.baidu.com/geodata/v3/geotable/list";
         $url = "http://api.map.baidu.com/geodata/v3/poi/list";
         $params = array('geotable_id' => 143034,
-            'ak'=>'NLBwYBHxe2AIx7YPmaAQenG5',
-            'sn'=>''
+            'ak' => 'NLBwYBHxe2AIx7YPmaAQenG5',
+            'sn' => ''
         );
 
 //        $rs = \SimpleHttpClient::get($url, $params);
 //        $data = json_decode($rs, true);
 //        dump($data);
-        $this->assign('post_url',U('home/index/createShop'));
+        $this->assign('post_url', U('home/index/createShop'));
         $this->display();
 
     }
-    
-    public function getPoint(){
+
+    public function getPoint()
+    {
 //        $url = "http://api.map.baidu.com/geodata/v3/geotable/list";
         $url = "http://api.map.baidu.com/geosearch/v3/local";
         $params = array('geotable_id' => 143034,
-            'ak'=>C('BAIDU_MAP_AK'),
-            'sn'=>'',
-            'page_size'=>50
+            'ak' => C('BAIDU_MAP_AK'),
+            'sn' => '',
+            'page_size' => 50
         );
         $rs = \SimpleHttpClient::get($url, $params);
         $data = json_decode($rs, true);
         $this->ajaxReturn($data);
     }
 
-    public function createShop(){
+    public function createShop()
+    {
 //        echo 'shop';
-        $latitude=$_POST['lat'];
-        $longitude=$_POST['lng'];
-        $shop_name=$_POST['shop_name'];
-        $address=$_POST['shop_address'];
+        $latitude = $_POST['lat'];
+        $longitude = $_POST['lng'];
+        $shop_name = $_POST['shop_name'];
+        $address = $_POST['shop_address'];
 
-        $url="http://api.map.baidu.com/geodata/v3/poi/create";
-        $params=array(
+        $url = "http://api.map.baidu.com/geodata/v3/poi/create";
+        $params = array(
             'geotable_id' => 143034,
-            'coord_type'=>3,
-            'ak'=>'NLBwYBHxe2AIx7YPmaAQenG5',
-            'latitude'=>$latitude,
-            'longitude'=>$longitude,
-            'shop_name'=>$shop_name,
-            'title'=>$shop_name,
-            'address'=>$address
+            'coord_type' => 3,
+            'ak' => 'NLBwYBHxe2AIx7YPmaAQenG5',
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'shop_name' => $shop_name,
+            'title' => $shop_name,
+            'address' => $address
         );
         $rs = \SimpleHttpClient::post($url, $params);
         $data = json_decode($rs, true);
         redirect(U('home/index/map'));
     }
 
-    public function ip(){
-        \Think\Log::write('ip:'.I('get.ip',0));
-        $pr_status=sendMail('34206043@qq.com','RasPi上线了',"the ip is :".I('get.ip',0));
-        echo "the ip is :".I('get.ip',0).",mail_status:".$pr_status;
+    public function ip()
+    {
+        \Think\Log::write('ip:' . I('get.ip', 0));
+        $pr_status = sendMail('34206043@qq.com', 'RasPi上线了', "the ip is :" . I('get.ip', 0));
+        echo "the ip is :" . I('get.ip', 0) . ",mail_status:" . $pr_status;
     }
 
-    public function travel(){
+    public function travel()
+    {
         $this->display();
+    }
+
+    public function ddz_dk()
+    {
+
+
+        $report = M("taoke_report_settle", "ddz_", "DB_CONFIG_DDZ");
+
+
+        //当日现金打款条数和金额
+        $conditons = array("OUTCODE_TYPE" => 'B', "SETTLE_STATUS" => 'U');
+        $today_toal_cash = $report->where($conditons)->count();
+        $today_sum_cash = round($report->where($conditons)->sum('SETTLE_FEE'), 2);
+
+        //当日集分宝打款条数和金额
+        $conditons = array("OUTCODE_TYPE" => 'J', "SETTLE_STATUS" => 'U');
+        $today_toal_jfb = $report->where($conditons)->count();
+        $today_sum_jfb = round($report->where($conditons)->sum('SETTLE_JFB') / 100, 2);
+
+        $data_today['today_toal_cash']=$today_toal_cash;
+        $data_today['today_sum_cash']=$today_sum_cash;
+        $data_today['today_toal_jfb']=$today_toal_jfb;
+        $data_today['today_sum_jfb']=$today_sum_jfb;
+
+        $this->assign('data_today',$data_today);
+        $this->display();
+
     }
 
 
