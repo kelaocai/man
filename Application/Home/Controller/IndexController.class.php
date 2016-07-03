@@ -353,7 +353,7 @@ class IndexController extends Controller
         $api_key = 'sk_live_5WLKO0XXzLC0DSSi5SPejvHS';
         $app_id = 'app_4q9CqP1GGq1OPaPC';
         \Pingpp\Pingpp::setApiKey($api_key);
-        $channel='wx_pub_qr';
+        $channel='wx_pub';
         $extra = array();
         switch ($channel) {
             case 'alipay_wap':
