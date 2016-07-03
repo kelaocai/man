@@ -322,7 +322,7 @@ class IndexController extends Controller
 
     public function ddz_dk()
     {
-
+        //点点折每日打款报表
 
         $report = M("taoke_report_settle", "ddz_", "DB_CONFIG_DDZ");
 
@@ -337,14 +337,91 @@ class IndexController extends Controller
         $today_toal_jfb = $report->where($conditons)->count();
         $today_sum_jfb = round($report->where($conditons)->sum('SETTLE_JFB') / 100, 2);
 
-        $data_today['today_toal_cash']=$today_toal_cash;
-        $data_today['today_sum_cash']=$today_sum_cash;
-        $data_today['today_toal_jfb']=$today_toal_jfb;
-        $data_today['today_sum_jfb']=$today_sum_jfb;
+        $data_today['today_toal_cash'] = $today_toal_cash;
+        $data_today['today_sum_cash'] = $today_sum_cash;
+        $data_today['today_toal_jfb'] = $today_toal_jfb;
+        $data_today['today_sum_jfb'] = $today_sum_jfb;
 
-        $this->assign('data_today',$data_today);
+        $this->assign('data_today', $data_today);
         $this->display();
 
+    }
+
+    public function pay()
+    {
+//        $api_key = 'sk_test_mLKSC00uDufPj9G48CyfvrnD';
+        $api_key = 'sk_live_5WLKO0XXzLC0DSSi5SPejvHS';
+        $app_id = 'app_4q9CqP1GGq1OPaPC';
+        \Pingpp\Pingpp::setApiKey($api_key);
+        $channel='wx_pub_qr';
+        $extra = array();
+        switch ($channel) {
+            case 'alipay_wap':
+                $extra = array(
+                    'success_url' => 'http://example.com/success',
+                    'cancel_url' => 'http://example.com/cancel'
+                );
+                break;
+            case 'alipay_pc_direct':
+                $extra = array(
+                    'success_url' => 'http://example.com/success',
+                );
+                break;
+            case 'bfb_wap':
+                $extra = array(
+                    'result_url' => 'http://example.com/result',
+                    'bfb_login' => true
+                );
+                break;
+            case 'upacp_wap':
+                $extra = array(
+                    'result_url' => 'http://example.com/result'
+                );
+                break;
+            case 'wx_pub':
+                $extra = array(
+                    'open_id' => 'ozolMuAnTRGa3UUqyJFEFiGEZOy0'
+                );
+                break;
+            case 'wx_pub_qr':
+                $extra = array(
+                    'product_id' => '008291'
+                );
+                break;
+            case 'yeepay_wap':
+                $extra = array(
+                    'product_category' => '1',
+                    'identity_id'=> 'your identity_id',
+                    'identity_type' => 1,
+                    'terminal_type' => 1,
+                    'terminal_id'=>'your terminal_id',
+                    'user_ua'=>'your user_ua',
+                    'result_url'=>'http://example.com/result'
+                );
+                break;
+            case 'jdpay_wap':
+                $extra = array(
+                    'success_url' => 'http://example.com/success',
+                    'fail_url'=> 'http://example.com/fail',
+                    'token' => 'dsafadsfasdfadsjuyhfnhujkijunhaf'
+                );
+                break;
+        }
+
+        $charge=\Pingpp\Charge::create(array(
+            'order_no'  => substr(time(),0,30),
+            'amount'    => '1',//订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
+            'app'       => array('id' => $app_id),
+            'channel'   => $channel,
+            'currency'  => 'cny',
+            'client_ip' => '127.0.0.1',
+            'subject'   => 'Your Subject',
+            'body'      => 'Your Body',
+            'extra'     => $extra
+        ));
+
+        $this->assign('charge',$charge);
+        $this->display();
     }
 
 
