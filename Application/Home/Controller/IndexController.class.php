@@ -424,5 +424,31 @@ class IndexController extends Controller
         $this->display();
     }
 
+    function red(){
+        $api_key = 'sk_test_mLKSC00uDufPj9G48CyfvrnD';
+//        $api_key = 'sk_live_5WLKO0XXzLC0DSSi5SPejvHS';
+        $app_id = 'app_4q9CqP1GGq1OPaPC';
+        \Pingpp\Pingpp::setApiKey($api_key);
+
+        //微信红包
+        $red = \Pingpp\RedEnvelope::create(
+            array(
+                'subject'     => '包菜爱你',
+                'body'        => '坚持就是胜利,今天的努力是对未来的救赎',
+                'amount'      => 199,//订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
+                'order_no'    => substr(time(),0,30),
+                'currency'    => 'cny',
+                'extra'       => array(
+                    'send_name' => '包菜仔'
+                ),
+                'recipient'   => 'ozolMuAnTRGa3UUqyJFEFiGEZOy0',//发送红包给指定用户的 open_id
+                'channel'     => 'wx_pub',//此处 wx_pub 为公众平台的支付
+                'app'         => array('id' => $app_id),
+                'description' => '恭喜发财'
+            )
+        );
+        echo $red;
+    }
+
 
 }
