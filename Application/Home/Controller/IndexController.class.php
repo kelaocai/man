@@ -104,7 +104,51 @@ class IndexController extends Controller
 
     public function fy()
     {
-        testSendFormatedMessage();
+//        testSendFormatedMessage();
+
+        //飞印传递信息
+        $xp_msg = I('post.xp_msg');
+        $xp_shopid = I('post.xp_shopid');
+
+        $device_no='9982172973682014';
+        $msgNo = time() + 1;
+
+        switch ($xp_shopid){
+            case 1:
+                $device_no='4600042606700803';
+                break;
+            case 2:
+                $device_no='9982172973682014';
+                break;
+            default:
+                $device_no='9982172973682014';
+        }
+
+
+        $freeMessage = array(
+            'memberCode' => MEMBER_CODE,
+            'msgDetail' =>$xp_msg,
+            'deviceNo' => $device_no,
+            'msgNo' => $msgNo,
+        );
+
+        $rs='发送状态:'.sendFreeMessage($freeMessage).'<br> 发送设备号:'.$device_no;
+
+        $this->assign('rs', $rs);
+        $this->display();
+
+
+
+
+    }
+
+    public function xp()
+    {
+        //打印小票
+        $this->assign('post_url', U('home/index/fy'));
+        $this->display();
+
+
     }
 
     public function test()
@@ -353,7 +397,7 @@ class IndexController extends Controller
         $api_key = 'sk_live_5WLKO0XXzLC0DSSi5SPejvHS';
         $app_id = 'app_4q9CqP1GGq1OPaPC';
         \Pingpp\Pingpp::setApiKey($api_key);
-        $channel='wx_pub';
+        $channel = 'wx_pub';
         $extra = array();
         switch ($channel) {
             case 'alipay_wap':
@@ -391,40 +435,41 @@ class IndexController extends Controller
             case 'yeepay_wap':
                 $extra = array(
                     'product_category' => '1',
-                    'identity_id'=> 'your identity_id',
+                    'identity_id' => 'your identity_id',
                     'identity_type' => 1,
                     'terminal_type' => 1,
-                    'terminal_id'=>'your terminal_id',
-                    'user_ua'=>'your user_ua',
-                    'result_url'=>'http://example.com/result'
+                    'terminal_id' => 'your terminal_id',
+                    'user_ua' => 'your user_ua',
+                    'result_url' => 'http://example.com/result'
                 );
                 break;
             case 'jdpay_wap':
                 $extra = array(
                     'success_url' => 'http://example.com/success',
-                    'fail_url'=> 'http://example.com/fail',
+                    'fail_url' => 'http://example.com/fail',
                     'token' => 'dsafadsfasdfadsjuyhfnhujkijunhaf'
                 );
                 break;
         }
 
-        $charge=\Pingpp\Charge::create(array(
-            'order_no'  => substr(time(),0,30),
-            'amount'    => '1',//订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
-            'app'       => array('id' => $app_id),
-            'channel'   => $channel,
-            'currency'  => 'cny',
+        $charge = \Pingpp\Charge::create(array(
+            'order_no' => substr(time(), 0, 30),
+            'amount' => '1',//订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
+            'app' => array('id' => $app_id),
+            'channel' => $channel,
+            'currency' => 'cny',
             'client_ip' => '127.0.0.1',
-            'subject'   => 'Your Subject',
-            'body'      => 'Your Body',
-            'extra'     => $extra
+            'subject' => 'Your Subject',
+            'body' => 'Your Body',
+            'extra' => $extra
         ));
 
-        $this->assign('charge',$charge);
+        $this->assign('charge', $charge);
         $this->display();
     }
 
-    function red(){
+    public function red()
+    {
         $api_key = 'sk_test_mLKSC00uDufPj9G48CyfvrnD';
 //        $api_key = 'sk_live_5WLKO0XXzLC0DSSi5SPejvHS';
         $app_id = 'app_4q9CqP1GGq1OPaPC';
@@ -433,21 +478,81 @@ class IndexController extends Controller
         //微信红包
         $red = \Pingpp\RedEnvelope::create(
             array(
-                'subject'     => '包菜爱你',
-                'body'        => '坚持就是胜利,今天的努力是对未来的救赎',
-                'amount'      => 199,//订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
-                'order_no'    => substr(time(),0,30),
-                'currency'    => 'cny',
-                'extra'       => array(
+                'subject' => '包菜爱你',
+                'body' => '坚持就是胜利,今天的努力是对未来的救赎',
+                'amount' => 199,//订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
+                'order_no' => substr(time(), 0, 30),
+                'currency' => 'cny',
+                'extra' => array(
                     'send_name' => '包菜仔'
                 ),
-                'recipient'   => 'ozolMuAnTRGa3UUqyJFEFiGEZOy0',//发送红包给指定用户的 open_id
-                'channel'     => 'wx_pub',//此处 wx_pub 为公众平台的支付
-                'app'         => array('id' => $app_id),
+                'recipient' => 'ozolMuAnTRGa3UUqyJFEFiGEZOy0',//发送红包给指定用户的 open_id
+                'channel' => 'wx_pub',//此处 wx_pub 为公众平台的支付
+                'app' => array('id' => $app_id),
                 'description' => '恭喜发财'
             )
         );
         echo $red;
+    }
+
+    public function transfer()
+    {
+        //微信企业转账
+//        $api_key = 'sk_test_mLKSC00uDufPj9G48CyfvrnD';
+        $api_key = 'sk_live_5WLKO0XXzLC0DSSi5SPejvHS';
+        $app_id = 'app_4q9CqP1GGq1OPaPC';
+        \Pingpp\Pingpp::setApiKey($api_key);
+        try {
+            $tr = \Pingpp\Transfer::create(
+                array(
+                    'amount' => 100,
+                    'order_no' => date('YmdHis') . (microtime(true) % 1) * 1000 . mt_rand(0, 9999),
+                    'currency' => 'cny',
+                    'channel' => 'wx_pub',
+                    'app' => array('id' => $app_id),
+                    'type' => 'b2c',
+                    'recipient' => 'ozolMuAnTRGa3UUqyJFEFiGEZOy0',
+                    'description' => 'testing',
+                    'extra' => array('user_name' => 'laocai', 'force_check' => false)
+                )
+            );
+            echo $tr;
+        } catch (\Pingpp\Error\Base $e) {
+            header('Status: ' . $e->getHttpStatus());
+            echo($e->getHttpBody());
+        }
+    }
+
+    public function webhooks()
+    {
+        //接受ping++ webhooks事件通知
+        $raw_data = file_get_contents('php://input');
+        $event = json_decode($raw_data, true);
+        if ($event['type'] == 'charge.succeeded') {
+            $charge = $event['data']['object'];
+            // ..
+            http_response_code(200); // PHP 5.4 or greater
+        } elseif ($event['type'] == 'refund.succeeded') {
+            $refund = $event['data']['object'];
+            // ...
+            http_response_code(200); // PHP 5.4 or greater
+        } else {
+            /**
+             * 其它类型 ...
+             * - summary.daily.available
+             * - summary.weekly.available
+             * - summary.monthly.available
+             * - transfer.succeeded
+             * - red_envelope.sent
+             * - red_envelope.received
+             * ...
+             */
+            http_response_code(200);
+
+            // 异常时返回非 2xx 的返回码
+            // http_response_code(400);
+        }
+
     }
 
 
