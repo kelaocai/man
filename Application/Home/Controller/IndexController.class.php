@@ -43,7 +43,7 @@ class IndexController extends Controller
             'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
         ];
 
-        dump($options);
+//        dump($options);
         $weObj = new \Org\Wx\Wechat($options);
         $weObj->valid();
         $type = $weObj->getRev()->getRevType();
@@ -553,6 +553,36 @@ class IndexController extends Controller
             // http_response_code(400);
         }
 
+    }
+    
+    public function wxjs(){
+
+        $options = [
+            'token' => C('WX_TOKEN'), //填写你设定的key
+            'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
+            'appid' => C('WX_APPID'), //填写高级调用功能的app id
+            'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
+        ];
+
+        $weObj = new \Org\Wx\Wechat($options);
+        $auth = $weObj->checkAuth();
+        $js_ticket = $weObj->getJsTicket();
+
+        if (!$js_ticket) {
+            echo "获取js_ticket失败！<br>";
+            echo '错误码：'.$weObj->errCode;
+            echo ' 错误原因：'.ErrCode::getErrText($weObj->errCode);
+            exit;
+        }else{
+//            echo '获取js_ticket成功'.$js_ticket;
+        }
+        $url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        echo $url;
+        $js_sign = $weObj->getJsSign($url);
+//        echo '$js_sign'.dump($js_sign);
+        $this->assign('js_sign', $js_sign);
+        $this->display();
+        
     }
 
 
