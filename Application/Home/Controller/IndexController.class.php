@@ -577,7 +577,7 @@ class IndexController extends Controller
 //            echo '获取js_ticket成功'.$js_ticket;
         }
         $url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-        echo $url;
+//        echo $url;
         $js_sign = $weObj->getJsSign($url);
 //        echo '$js_sign'.dump($js_sign);
         $this->assign('js_sign', $js_sign);
