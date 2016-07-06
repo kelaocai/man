@@ -13,8 +13,11 @@ return array(
     'MAIL_ISHTML' => TRUE, // 是否HTML格式邮件
     'WX_TOKEN' => '1qaz2wsx',
     'WX_ENCODINGAESKEY' => 'bMY75kCr4C4tGDtKFNHjZ0I5ZKNDU42DQXAQzxGY5v0',
-    'WX_APPID'=>'wx68b800e79738a452',//生产
-    'WX_APPSECRET'=>'57fb691b606420fe6d9bec9ef5c69274',//生产
+//    'WX_APPID'=>'wx68b800e79738a452',//baocaizai生产
+//    'WX_APPSECRET'=>'57fb691b606420fe6d9bec9ef5c69274',//baocaizai生产
+    'WX_APPID'=>'wx4e4b57848ce1ced4',//yikebaocai生产
+    'WX_APPSECRET'=>'c94fd3da4d006277fe09d90d9d438202',//yikebaocai生产
+
 //    'WX_APPID' => 'wx8e9af23cb8d804e8',//测试
 //    'WX_APPSECRET' => '3208fc5407922bd7e3327f78febaa6eb',//测试
 
