@@ -118,7 +118,7 @@ class IndexController extends Controller
                 $device_no='4600042606700803';
                 break;
             case 2:
-                $device_no='9982172973682014';
+                $device_no='4600042606700825';
                 break;
             default:
                 $device_no='9982172973682014';

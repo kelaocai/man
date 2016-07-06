@@ -74,13 +74,13 @@
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <li><a href="#" onclick="switch_shop('1')">科兴旗舰店</a></li>
-                    <li><a href="#" onclick="switch_shop('2')">测试机</a></li>
+                    <li><a href="#" onclick="switch_shop('2')">翰岭院</a></li>
                 </ul>
             </div>
             <br>
             <form name="" action="{$post_url}" method="post">
                 <textarea class="form-control" rows="3" name="xp_msg"></textarea>
-                <input name="xp_shopid" id="shopid" value="0" type="hidden"><br>
+                <input name="xp_shopid" id="shopid" value="1" type="hidden"><br>
                 <button type="submit" class="btn btn-success">提交</button>
             </form>
 
@@ -104,7 +104,7 @@
 
     function switch_shop(id) {
 //        alert(id);
-        var shop_name=new Array('','科兴旗舰店','测试机');
+        var shop_name=new Array('','科兴旗舰店','翰岭院');
 
 
         $("#dropdownMenu1").html(shop_name[id]+'<span class="caret"></span>');
