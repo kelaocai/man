@@ -9,7 +9,8 @@
 
     <!-- Bootstrap -->
     <link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="Public/css/jumbotron-narrow.css" rel="stylesheet">
+    <link href="Public/css/wx.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,58 +24,113 @@
 
 <div class="container" style="max-width: 730px;">
 
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                        aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">weixinJS</a>
-            </div>
-            <div id="navbar" class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">其他 <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-
-                        </ul>
-                    </li>
-                </ul>
-            </div><!--/.nav-collapse -->
-        </div>
-    </nav>
-    <!--<div class="header clearfix">-->
-    <!--<nav class="navbar navbar-default navbar-fixed-top">-->
-    <!--<ul class="nav ">-->
-    <!--<li role="presentation" class="active"><a href="#">Home</a></li>-->
-    <!--<li role="presentation"><a href="#">About</a></li>-->
-    <!--</ul>-->
-    <!--</nav>-->
-    <!--&lt;!&ndash;<img src="http://style.diandianzhe.com/corner/img/logo_200x100.png" alt="..." class="img img-responsive" >&ndash;&gt;-->
-    <!--</div>-->
 
 
-    <div class="row marketing">
-        <div class="col-lg-12">
-            <button type="submit" class="btn btn-success" id="demo">提交</button>
-
-        </div>
-
-
+    <div class="hd">
+        <h1 class="page_title">BaoCaiPlus</h1>
+        <p class="page_desc">智能门店互联服务</p>
     </div>
 
-    <footer class="footer">
-        <p>© Company 2016</p>
-    </footer>
+
+    <div class="weui_grids">
+        <a href="#/button" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_search_bar"></i>
+            </div>
+            <p class="weui_grid_label">
+                发现小站
+            </p>
+        </a>
+        <a href="#/cell" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_panel"></i>
+            </div>
+            <p class="weui_grid_label">
+                来这里开店
+            </p>
+        </a>
+        <a href="#/toast" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_toast"></i>
+            </div>
+            <p class="weui_grid_label">
+                Toast
+            </p>
+        </a>
+        <a href="#/dialog" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_dialog"></i>
+            </div>
+            <p class="weui_grid_label">
+                联系我们
+            </p>
+        </a>
+        <a href="#/progress" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_progress"></i>
+            </div>
+            <p class="weui_grid_label">
+                Progress
+            </p>
+        </a>
+        <a href="#/msg" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_msg"></i>
+            </div>
+            <p class="weui_grid_label">
+                Msg
+            </p>
+        </a>
+        <a href="#/article" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_article"></i>
+            </div>
+            <p class="weui_grid_label">
+                Article
+            </p>
+        </a>
+        <a href="#/actionsheet" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_actionSheet"></i>
+            </div>
+            <p class="weui_grid_label">
+                ActionSheet
+            </p>
+        </a>
+        <a href="#/icons" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_icons"></i>
+            </div>
+            <p class="weui_grid_label">
+                Icons
+            </p>
+        </a>
+        <a href="#/panel" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_panel"></i>
+            </div>
+            <p class="weui_grid_label">
+                Panel
+            </p>
+        </a>
+        <a href="#/tab" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_tab"></i>
+            </div>
+            <p class="weui_grid_label">
+                Tab
+            </p>
+        </a>
+        <a href="#/searchbar" class="weui_grid">
+            <div class="weui_grid_icon">
+                <i class="icon icon_search_bar"></i>
+            </div>
+            <p class="weui_grid_label">
+                SearchBar
+            </p>
+        </a>
+    </div>
+
 
 </div><!-- /.container -->
 
@@ -82,6 +138,7 @@
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="//cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 
 <script type="text/javascript">
@@ -140,9 +197,6 @@
     });
 
 
-
-
-
     wx.ready(function () {
 //        alert("启动jsapi!");
 
@@ -192,19 +246,7 @@
     });
 
 
-
-
-
-
-
-
-
-
-
-
     $(document).ready(function () {
-
-
 
 
     });
