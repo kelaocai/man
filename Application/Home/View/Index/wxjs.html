@@ -25,7 +25,6 @@
 <div class="container" style="max-width: 730px;">
 
 
-
     <div class="hd">
         <h1 class="page_title">BaoCaiPlus</h1>
         <p class="page_desc">智能门店互联服务</p>
@@ -33,7 +32,7 @@
 
 
     <div class="weui_grids">
-        <a href="#/button" class="weui_grid">
+        <a href="javascript:void(0)" class="weui_grid" onclick="get_zb()">
             <div class="weui_grid_icon">
                 <i class="icon icon_search_bar"></i>
             </div>
@@ -129,6 +128,39 @@
                 SearchBar
             </p>
         </a>
+    </div>
+
+    <div id="loadingToast" class="weui_loading_toast" style="display:none;">
+        <div class="weui_mask_transparent"></div>
+        <div class="weui_toast">
+            <div class="weui_loading">
+                <!-- :) -->
+                <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+            </div>
+            <p class="weui_toast_content">数据加载中</p>
+        </div>
+    </div>
+
+    <div id="weui_dialog" class="weui_dialog_alert" style="display:none;">
+        <div class="weui_mask"></div>
+        <div class="weui_dialog">
+            <div class="weui_dialog_hd"><strong class="weui_dialog_title">查询结果</strong></div>
+            <div class="weui_dialog_bd" id="weui_dialog_msg"></div>
+            <div class="weui_dialog_ft">
+                <a href="javascript:void(0)" class="weui_btn_dialog primary" onclick="close_dialog()">确定</a>
+            </div>
+        </div>
     </div>
 
 
@@ -243,8 +275,41 @@
             }
         });
 
+
     });
 
+
+    function get_zb() {
+        $('#loadingToast').css('display','block');
+        wx.getLocation({
+            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
+//                alert(latitude+','+longitude);
+                $.post("?m=home&c=index&a=find_baocai",
+                        {
+                            latitude: latitude,
+                            longitude: longitude
+                        },
+                        function (data, status) {
+                            if($('#loadingToast').css('display','none')){
+                                $('#weui_dialog_msg').html(data);
+                                $('#weui_dialog').css('display','block');
+                            };
+
+
+                        });
+            }
+        });
+
+    }
+
+    function close_dialog() {
+        $('#weui_dialog').css('display','none');
+    }
 
     $(document).ready(function () {
 

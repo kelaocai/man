@@ -214,14 +214,19 @@ class IndexController extends Controller
 
         $method = 'kdt.trades.sold.get';
         $params = [
-            'page_size' => 50
+            'page_size' => 50,
+            'status'=>'WAIT_BUYER_CONFIRM_GOODS',
+            'start_created'=>'2016-07-01'
         ];
 
 
         $rs = $client->get($method, $params);
         foreach ($rs as $key => $val) {
             foreach ($val['trades'] as $key2 => $val2) {
-                echo ($val2['title'] . '--' . $val2['buyer_nick']) . '<br>' . '<br>';
+                foreach ($val2['orders'] as $key3=>$val3){
+                    echo ($val3['sku_properties_name'] . '--' . $val2['payment']. '--' . $val2['num']).'<br>' . '<br>';
+                }
+
             }
 
         }
@@ -583,6 +588,26 @@ class IndexController extends Controller
         $this->assign('js_sign', $js_sign);
         $this->display();
         
+    }
+
+    public function find_baocai(){
+        $Location_X = I('post.latitude');
+        $Location_Y = I('post.longitude');
+        $params = [
+            'ak' => 'lB3MdI4HADGDT8trntoLxOWR',
+            'geotable_id' => 143034,
+            'location' => $Location_Y . ',' . $Location_X,
+            'radius' => 1500
+        ];
+        $rs = \SimpleHttpClient::get('http://api.map.baidu.com/geosearch/v3/nearby', $params);
+        $data = json_decode($rs, true);
+        $add_list = '';
+//        \Think\Log::write($rs . 'sss', 'WARN');
+        foreach ($data['contents'] as $key => $val) {
+            $add_list = $add_list . $val['shop_name'] . ":" . $val['address'] . "\n";
+        }
+
+        $this->ajaxReturn("发现【" . $data['total'] . "】颗包菜\n" . $add_list);
     }
 
 
