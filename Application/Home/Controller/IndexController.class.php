@@ -610,5 +610,9 @@ class IndexController extends Controller
         $this->ajaxReturn("发现【" . $data['total'] . "】颗包菜\n" . $add_list);
     }
 
+    public function wx_zh(){
+        $this->display();
+    }
+
 
 }
