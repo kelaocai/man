@@ -38,67 +38,47 @@
 
 
     <div class="hd">
-        <h1 class="page_title">BaoCaiPlus</h1>
-        <p class="page_desc">包菜智能门店互联服务</p>
+        <a href="?m=home&c=index&a=wxjs">
+            <h1 class="page_title">BaoCaiPlus</h1>
+            <p class="page_desc">包菜智能门店互联服务</p>
+        </a>
     </div>
 
 
     <div class="weui_panel">
         <!--<div class="weui_panel_hd">包菜地图</div>-->
         <div class="weui_panel_bd">
+
+            <div class="weui_cell">
+                <div class="weui_cell_hd"><label class="weui_label">我的地址</label></div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" id="suggestId" placeholder="请输入小店地址" type="text">
+                </div>
+            </div>
+
+            <div class="weui_cell">
+                <div class="weui_cell_hd"><label class="weui_label">店名</label></div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" id="shop_name" placeholder="取个好听的名字" type="text">
+                </div>
+            </div>
+
             <div class="weui_media_box weui_media_text">
-                <h4 class="weui_media_title">坐标定位</h4>
-                <p class="weui_media_desc">定位你的小店,一键召唤,马上入驻一颗包菜大家庭</p>
+                <h4 class="weui_media_title">召唤一颗包菜</h4>
+                <p class="weui_media_desc">定位你的小店,提交申请,马上加入一颗包菜大家庭</p>
                 <div id="l-map" style="border:1px #bbbbbb solid "></div>
                 <div id="searchResultPanel"
                      style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
             </div>
+
+            <input name="lng" value="22" id="p_lgn" type="hidden"/>
+            <input name="lat" value="11" id="p_lat" type="hidden"/>
+
+            <a href="javascript:;" class="weui_btn weui_btn_primary" onclick="add_shop()">提交申请</a>
         </div>
+
     </div>
 
-
-    <div class="weui_cell">
-        <div class="weui_cell_hd"><label class="weui_label">我的地址</label></div>
-        <div class="weui_cell_bd weui_cell_primary">
-            <input class="weui_input" id="suggestId" placeholder="请输入小店地址" type="text">
-        </div>
-    </div>
-
-    <div class="weui_cell">
-        <div class="weui_cell_hd"><label class="weui_label">店名</label></div>
-        <div class="weui_cell_bd weui_cell_primary">
-            <input class="weui_input" placeholder="取个好听的名字" type="text">
-        </div>
-    </div>
-
-    <input name="lng" value="22" id="p_lgn" type="hidden" />
-    <input name="lat" value="11" id="p_lat" type="hidden" />
-
-    <a href="javascript:;" class="weui_btn weui_btn_primary">提交申请</a>
-    <!--<div class="weui_cell weui_vcode">-->
-    <!--<div class="weui_cell_hd"><label class="weui_label">验证码</label></div>-->
-    <!--<div class="weui_cell_bd weui_cell_primary">-->
-    <!--<input class="weui_input" placeholder="请输入验证码" type="number">-->
-    <!--</div>-->
-    <!--<div class="weui_cell_ft">-->
-    <!--<img src="./images/vcode.jpg">-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="weui_cell">-->
-    <!--<div class="weui_cell_hd"><label class="weui_label">银行卡</label></div>-->
-    <!--<div class="weui_cell_bd weui_cell_primary">-->
-    <!--<input class="weui_input" pattern="[0-9]*" placeholder="请输入银行卡号" type="number">-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="weui_cell weui_vcode weui_cell_warn">-->
-    <!--<div class="weui_cell_hd"><label class="weui_label">验证码</label></div>-->
-    <!--<div class="weui_cell_bd weui_cell_primary">-->
-    <!--<input class="weui_input" placeholder="请输入验证码" type="number">-->
-    <!--</div>-->
-    <!--<div class="weui_cell_ft">-->
-    <!--<i class="weui_icon_warn"></i>-->
-    <!--<img src="./images/vcode.jpg">-->
-    <!--</div>-->
 </div>
 
 <div id="loadingToast" class="weui_loading_toast" style="display:none;">
@@ -126,8 +106,14 @@
 <div id="weui_dialog" class="weui_dialog_alert" style="display:none;">
     <div class="weui_mask"></div>
     <div class="weui_dialog">
-        <div class="weui_dialog_hd"><strong class="weui_dialog_title">查询结果</strong></div>
-        <div class="weui_dialog_bd" id="weui_dialog_msg"></div>
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">提交结果</strong></div>
+        <div class="weui_dialog_bd">
+            <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
+            <div class="weui_text_area">
+                <h2 class="weui_msg_title" id="weui_dialog_msg">操作成功</h2>
+                <!--<p class="weui_msg_desc" >内容详情，可根据实际需要安排</p>-->
+            </div>
+        </div>
         <div class="weui_dialog_ft">
             <a href="javascript:void(0)" class="weui_btn_dialog primary" onclick="close_dialog()">确定</a>
         </div>
@@ -147,11 +133,36 @@
 <script type="text/javascript">
 
 
-
-
-
     function close_dialog() {
         $('#weui_dialog').css('display', 'none');
+    }
+
+    function add_shop() {
+        var latitude = $('#p_lat').val();
+        var longitude = $('#p_lgn').val();
+        var shop_name = $('#suggestId').val();
+        var shop_address = $('#shop_name').val();
+
+//        alert(latitude+','+longitude+','+shop_name);
+        $('#loadingToast').css('display', 'block');
+
+        $.post("?m=home&c=index&a=create_shop",
+                {
+                    lat: latitude,
+                    lng: longitude,
+                    shop_address: shop_address,
+                    shop_name: shop_name
+                },
+                function (data, status) {
+                    if ($('#loadingToast').css('display', 'none')) {
+                        $('#weui_dialog_msg').html(data.message);
+                        $('#weui_dialog').css('display', 'block');
+//                        init_map();
+                    }
+                    ;
+
+
+                });
     }
 
     $(document).ready(function () {
@@ -161,7 +172,7 @@
         }
 
         var map = new BMap.Map("l-map");
-        map.centerAndZoom("深圳", 12);                   // 初始化地图,设置城市和地图级别。
+
 
         // 编写自定义函数,创建标注
         function addMarker(point, label) {
@@ -181,7 +192,6 @@
 //            marker.setLabel(label);
             map.addOverlay(marker);
         }
-
 
 
         //获取标注点集合
@@ -261,8 +271,14 @@
             local.search(myValue);
         }
 
-        //叠加point
-        addPoint();
+        function init_map() {
+            map.centerAndZoom("深圳", 12);                   // 初始化地图,设置城市和地图级别。
+            //叠加point
+            addPoint();
+        }
+
+        init_map();
+
 
         //获取当前位置
         var geolocation = new BMap.Geolocation();

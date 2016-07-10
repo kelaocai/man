@@ -562,32 +562,43 @@ class IndexController extends Controller
     
     public function wxjs(){
 
-        $options = [
-            'token' => C('WX_TOKEN'), //填写你设定的key
-            'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
-            'appid' => C('WX_APPID'), //填写高级调用功能的app id
-            'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
-        ];
-
-        $weObj = new \Org\Wx\Wechat($options);
-        $auth = $weObj->checkAuth();
-        $js_ticket = $weObj->getJsTicket();
-
-        if (!$js_ticket) {
-            echo "获取js_ticket失败！<br>";
-            echo '错误码：'.$weObj->errCode;
-            echo ' 错误原因：'.ErrCode::getErrText($weObj->errCode);
-            exit;
-        }else{
-//            echo '获取js_ticket成功'.$js_ticket;
-        }
-        $url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-//        echo $url;
-        $js_sign = $weObj->getJsSign($url);
-//        echo '$js_sign'.dump($js_sign);
-        $this->assign('js_sign', $js_sign);
+        $this->assign('js_sign', $this->get_js_sign());
         $this->display();
         
+    }
+
+    private function get_js_sign(){
+
+
+        if(!$rs_js_sign=S('js_sign')) {
+
+            $options = [
+                'token' => C('WX_TOKEN'), //填写你设定的key
+                'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
+                'appid' => C('WX_APPID'), //填写高级调用功能的app id
+                'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
+            ];
+
+            $weObj = new \Org\Wx\Wechat($options);
+            $auth = $weObj->checkAuth();
+            $js_ticket = $weObj->getJsTicket();
+
+            if (!$js_ticket) {
+                echo "获取js_ticket失败！<br>";
+                echo '错误码：' . $weObj->errCode;
+                echo ' 错误原因：' . ErrCode::getErrText($weObj->errCode);
+                exit;
+            } else {
+//            echo '获取js_ticket成功'.$js_ticket;
+            }
+            $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            $js_sign = $weObj->getJsSign($url);
+            S('js_sign', $js_sign, 24 * 3600);
+            $rs_js_sign =$js_sign;
+
+        }
+
+        return $rs_js_sign;;
     }
 
     public function find_baocai(){
@@ -610,7 +621,30 @@ class IndexController extends Controller
         $this->ajaxReturn("发现【" . $data['total'] . "】颗包菜\n" . $add_list);
     }
 
+    public function create_shop(){
+        $latitude = $_POST['lat'];
+        $longitude = $_POST['lng'];
+        $shop_name = $_POST['shop_name'];
+        $address = $_POST['shop_address'];
+
+        $url = "http://api.map.baidu.com/geodata/v3/poi/create";
+        $params = array(
+            'geotable_id' => 143034,
+            'coord_type' => 3,
+            'ak' => 'NLBwYBHxe2AIx7YPmaAQenG5',
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'shop_name' => $shop_name,
+            'title' => $shop_name,
+            'address' => $address
+        );
+        $rs = \SimpleHttpClient::post($url, $params);
+        $data = json_decode($rs, true);
+        $this->ajaxReturn($data);
+    }
+
     public function wx_zh(){
+        $this->assign('post_url', U('home/index/createShop'));
         $this->display();
     }
 
