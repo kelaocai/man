@@ -649,4 +649,41 @@ class IndexController extends Controller
     }
 
 
+    public function wx_bj(){
+        $options = [
+            'token' => C('WX_TOKEN'), //填写你设定的key
+            'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
+            'appid' => C('WX_APPID'), //填写高级调用功能的app id
+            'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
+        ];
+
+        $weObj = new \Org\Wx\Wechat($options);
+        $auth = $weObj->checkAuth();
+        $js_ticket = $weObj->getJsTicket();
+
+        if (!$js_ticket) {
+            echo "获取js_ticket失败！<br>";
+            echo '错误码：' . $weObj->errCode;
+            echo ' 错误原因：' . ErrCode::getErrText($weObj->errCode);
+            exit;
+        } else {
+//            echo '获取js_ticket成功'.$js_ticket;
+        }
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $js_sign = $weObj->getJsSign($url);
+        $this->assign('js_sign', $js_sign);
+        $this->assign('js_url', $url);
+        $this->display();
+    }
+    
+    public function bj(){
+        $bj= M("bj", "ss_", "DB_CONFIG_APP");
+        $data['data']=$_POST['lat'].','.$_POST['lng'];
+        $data['time']=date('y-m-d h:i:s',time());
+        $bj->add($data);
+//        echo time();
+    }
+   
+
+
 }
