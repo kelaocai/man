@@ -1,3 +1,4 @@
 .idea
 Applications/MAMP/htdocs/man/Application/Runtime/Logs/
+Applications/MAMP/htdocs/man/Application/Runtime/Cache/
 Application/Home/Conf/config.php
