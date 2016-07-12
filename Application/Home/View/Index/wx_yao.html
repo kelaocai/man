@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>weixinJs</title>
+
+    <!-- Bootstrap -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Public/css/wx.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+
+<div class="container" style="max-width: 730px;">
+
+
+    <div class="hd">
+        <a href="?m=home&c=index&a=wxjs">
+            <h1 class="page_title">BaoCaiPlus</h1>
+            <p class="page_desc">包菜智能门店互联服务</p>
+        </a>
+    </div>
+
+
+    yao!
+
+
+</div><!-- /.container -->
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+<!--<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>-->
+<script src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+
+<script type="text/javascript">
+
+
+    wx.config({
+//        debug: true,
+        appId: '{$js_sign['appId']}',// 必填，公众号的唯一标识
+        timestamp: {$js_sign['timestamp']}, // 必填，生成签名的时间戳，切记时间戳是整数型，别加引号
+        nonceStr: '{$js_sign['nonceStr']}', // 必填，生成签名的随机串
+        signature: '{$js_sign['signature']}', // 必填，签名，见附录1
+        jsApiList: [
+            'checkJsApi',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ',
+            'onMenuShareWeibo',
+            'hideMenuItems',
+            'showMenuItems',
+            'hideAllNonBaseMenuItem',
+            'showAllNonBaseMenuItem',
+            'translateVoice',
+            'startRecord',
+            'stopRecord',
+            'onRecordEnd',
+            'playVoice',
+            'pauseVoice',
+            'stopVoice',
+            'uploadVoice',
+            'downloadVoice',
+            'chooseImage',
+            'previewImage',
+            'uploadImage',
+            'downloadImage',
+            'getNetworkType',
+            'openLocation',
+            'getLocation',
+            'hideOptionMenu',
+            'showOptionMenu',
+            'closeWindow',
+            'scanQRCode',
+            'chooseWXPay',
+            'openProductSpecificView',
+            'addCard',
+            'chooseCard',
+            'openCard',
+            'startSearchBeacons',
+            'onSearchBeacons'
+        ]
+    });
+
+
+    wx.ready(function () {
+//        alert("启动jsapi!");
+
+        wx.onMenuShareAppMessage({
+            title: '快来和包菜仔一起开家气泡水店吧',
+            desc: '钱和想法都到位,就差你了,快来和包菜仔一起开家气泡水店吧',
+            link: 'http://baocai.us',
+            imgUrl: 'https://img.yzcdn.cn/upload_files/2016/03/02/a024791b49bdef8e2bb2ab03436f8e01.jpeg',
+            trigger: function (res) {
+                alert("点击分享：" + JSON.stringify(res));
+                // 用户确认分享后执行的回调函数
+            },
+            success: function (res) {
+                alert("分享成功：" + JSON.stringify(res));
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function (res) {
+                alert("取消分享：" + JSON.stringify(res));
+                // 用户取消分享后执行的回调函数
+            },
+            fail: function (res) {
+                alert("分享失败：" + JSON.stringify(res));
+            }
+        });
+
+        wx.onMenuShareTimeline({
+            title: '包菜仔召唤你,快来和包菜仔一起开家气泡水店吧',
+            link: 'http://baocai.us',
+            imgUrl: 'https://img.yzcdn.cn/upload_files/2016/03/02/a024791b49bdef8e2bb2ab03436f8e01.jpeg',
+            trigger: function (res) {
+                alert("点击分享：" + JSON.stringify(res));
+                // 用户确认分享后执行的回调函数
+            },
+            success: function (res) {
+                alert("分享成功：" + JSON.stringify(res));
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function (res) {
+                alert("取消分享：" + JSON.stringify(res));
+                // 用户取消分享后执行的回调函数
+            },
+            fail: function (res) {
+                alert("分享失败：" + JSON.stringify(res));
+            }
+        });
+
+        wx.startSearchBeacons({
+            ticket: "",
+            complete: function (argv) {
+                //回调函数
+//                alert('start' + argv);
+            }
+        });
+
+        wx.onSearchBeacons({
+            complete: function (argv) {
+                //回调函数
+                alert('onsearch');
+            }
+        });
+
+
+    });
+
+
+    $(document).ready(function () {
+
+
+    });
+</script>
+</body>
+</html>
