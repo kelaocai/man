@@ -154,26 +154,16 @@ class IndexController extends Controller
     public function test()
     {
 
-//        S('wx_$access_token',null);
-//        $access_token = $this->getWxtoken();
-//        $client = new \KdtApiOauthClient();
-//        $method = 'kdt.trades.sold.get';
-//        $params = [
-//            'page_size' => 50
-//        ];
-//
-//        $rs = $client->get($access_token, $method, $params);
-//        foreach ($rs as $key => $val) {
-//            foreach ($val['trades'] as $key2 => $val2) {
-//                echo ($val2['title'] . '--' . $val2['buyer_nick']) . '<br>' . '<br>';
-//            }
-//
-//        }
-        $num = 23.55;
-//        echo U('home/index/plan/?serial_number=1');
-        $handle = \printer_open();
-        printer_write($handle, "Text to print");
-        printer_close($handle);
+        $options = [
+            'token' => C('WX_TOKEN'), //填写你设定的key
+            'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
+            'appid' => C('WX_APPID'), //填写高级调用功能的app id
+            'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
+        ];
+
+        $weObj = new \Org\Wx\Wechat($options);
+        $auth = $weObj->checkAuth();
+        echo $auth;
 
     }
 
