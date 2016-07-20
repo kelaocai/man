@@ -3,6 +3,9 @@ namespace Demo\Controller;
 
 use Think\Controller;
 
+Vendor('kf5.Client');
+Vendor('kf5.core.apiRequire');
+
 class IndexController extends Controller
 {
 
@@ -41,20 +44,21 @@ class IndexController extends Controller
                 exit;
                 break;
             case \Org\Wx\Wechat::MSGTYPE_EVENT:
-                $key = $weObj->getRevEvent()['key'];
-                switch ($key) {
-                    case MENU_KEY_NEWUSER:
+                if ($key = $weObj->getRevEvent()['key']) {
+                    switch ($key) {
+                        case MENU_KEY_NEWUSER:
 
-                        $user_openid = $weObj->getRev()->getRevFrom();
-                        $url = $HOST_URL . U('Demo/index/index', array('openid' => $user_openid));
-                        session('wx_user.openid', $user_openid);
-                        $weObj->text('Demo:' . "<a href='$url'>新用户注册</a>")->reply();
-                        break;
-                    case MENU_KEY_PROGRESS:
-                        $url = $HOST_URL . U('Demo/index/jd');
-                        $weObj->text('Demo:' . "<a href='$url'>检测报告进度</a>")->reply();
-                        break;
-                }
+                            $user_openid = $weObj->getRev()->getRevFrom();
+                            $url = $HOST_URL . U('Demo/index/index', array('openid' => $user_openid));
+                            session('wx_user.openid', $user_openid);
+                            $weObj->text('Demo:' . "<a href='$url'>新用户注册</a>")->reply();
+                            break;
+                        case MENU_KEY_PROGRESS:
+                            $url = $HOST_URL . U('Demo/index/jd');
+                            $weObj->text('Demo:' . "<a href='$url'>检测报告进度</a>")->reply();
+                            break;
+                    }
+                };
                 break;
             case \Org\Wx\Wechat::MSGTYPE_IMAGE:
                 break;
@@ -94,7 +98,7 @@ class IndexController extends Controller
         echo "result:" . $result;
     }
 
-    private function sendmb($weObj, $to_openid)
+    private function sendmb($weObj, $to_openid, $msg,$url)
     {
 
 //        $options = [
@@ -109,9 +113,9 @@ class IndexController extends Controller
         $data = array('touser' => $to_openid);
         $data['template_id'] = 'FrZZwNbeXO8veuokFCzzcU9SZg2m1UbX3ohykOEdn_Q';
         $data['topcolor'] = '#FF0000';
-        $data['url'] = 'http://baocai.vip.natapp.cn/man/?m=demo&c=index&a=jd';
+        $data['url'] = $url;
 
-        $paramter_data = array('msg' => array('value' => '样本签收', "color" => "#3cc51f"));
+        $paramter_data = array('msg' => array('value' => $msg, "color" => "#3cc51f"));
         $paramter_data['time'] = array('value' => date('Y-m-d', time()));
         $paramter_data['name'] = array('value' => '瑞享瘦', "color" => '#0338bf');
 
@@ -124,7 +128,34 @@ class IndexController extends Controller
 
     public function jd()
     {
-//        echo U('Demo/index/jd');
+
+        //取订单信息
+        $orders= M("order", "ss_", "DB_CONFIG_APP");
+        $kf_id=I('get.kfid');
+        $map=array('kfid'=>$kf_id);
+        $order = $orders->where($map)->order('createdate desc')->find();
+        $this->assign('order_progress',$order['status']*20);
+        switch ($order['status']) {
+            case 1:
+                $this->assign('order_status','采样器寄出');
+                break;
+            case 2:
+                $this->assign('order_status','样品收到');
+                break;
+            case 3:
+                $this->assign('order_status','送检中');
+                break;
+            case 4:
+                $this->assign('order_status','检测结果分析');
+                break;
+            case 5:
+                $this->assign('order_status','检测报告完成');
+                break;
+            default:
+                $this->assign('order_status','暂无进度');
+        }
+
+
         $this->display();
     }
 
@@ -141,8 +172,8 @@ class IndexController extends Controller
 //        $data['nickname']=I('post.real_name');
         $data['createdate'] = date('y-m-d h:i:s', time());
         $bj->add($data);
-        $url = 'http://' . $_SERVER['HTTP_HOST']  . U('Demo/index/order');
-        $rs = array('message' => 'hello', 'url' => $url);
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/order');
+        $rs = array('message' => '', 'url' => $url);
 //        $data = json_decode($rs, true);
         $this->ajaxReturn($rs);
     }
@@ -158,6 +189,51 @@ class IndexController extends Controller
 
     public function createOrder()
     {
+
+
+        $kf_domain = C('KF_DOMAIN');
+        $kf_email = C('KF_EMAIL');
+        $kf_token = C('KF_TOKEN');
+        $kf_password = C('KF_PASSWORD');
+
+        $kf = new \Client($kf_domain, $kf_email);
+        $kf->setAuth('password', $kf_password);
+
+        //取用户信息
+        $openid = I('post.openid');
+        $orderno = I('post.orderno');
+        $user = M("user", "ss_", "DB_CONFIG_APP");
+        $map = array('openid' => $openid);
+        $data_user = $user->where($map)->order('createdate desc')->find();
+
+
+        $kf_order = array(
+            'title' => '订单[' . $orderno . ']-瑞享瘦-'.$data_user['name'],
+            'comment' => array('content' => '订单[' . $orderno . ']'), 'requester' => array('email' => $data_user['email'], 'name' => $data_user['name'])
+        );
+
+        $kf_data = $kf->tickets()->create($kf_order);
+
+        $kf_id=$kf_data->ticket->id;
+
+        $order = M("order", "ss_", "DB_CONFIG_APP");
+        $new_order = array('orderno' => $orderno, 'userid' => $data_user['id'], 'itemid' => '1', 'createdate' => date('y-m-d h:i:s', time()), 'status' => '0','kfid'=>$kf_id);
+        $order->add($new_order);
+
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/jd','kfid='.$kf_id);
+        $rs = array('message' =>$kf_id, 'url' => $url);
+        $this->ajaxReturn($rs);
+
+
+
+
+//
+    }
+
+    public function hook()
+    {
+
+       $msg=I('get.msg');
         $options = [
             'token' => C('WX_TOKEN'), //填写你设定的key
             'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
@@ -165,18 +241,52 @@ class IndexController extends Controller
             'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
         ];
 
+        $HOST_URL = 'http://' . $_SERVER['HTTP_HOST'] ;
+
+        $data=explode('|',$msg);
+
+        //取订单信息
+        $orders= M("order", "ss_", "DB_CONFIG_APP");
+        $kf_id=$data[1];
+        $map=array('kfid'=>$kf_id);
+        $order = $orders->where($map)->order('createdate desc')->find();
+        //更新订单信息
+        switch ($data[0]) {
+            case '采样器寄出':
+                $order['status']=1;
+                break;
+            case '样品收到':
+                $order['status']=2;
+                break;
+            case '送检中':
+                $order['status']=3;
+                break;
+            case '检测结果分析':
+                $order['status']=4;
+                break;
+            case '检测报告完成':
+                $order['status']=5;
+                break;
+        }
+        $orders->where('kfid='.$data[1])->save($order);
+
+
+        $users= M("user", "ss_", "DB_CONFIG_APP");
+        $map=array('id'=>$order['userid']);
+        $user = $users->where($map)->order('createdate desc')->find();
+
+
 
         $weObj = new \Org\Wx\Wechat($options);
+        $url = $HOST_URL . U('Demo/index/jd','kfid='.$kf_id);
+        $this->sendmb($weObj, $user['openid'],$data[0],$url);
 
+    }
 
-        $to_openid = session('wx_user.openid');
-        $this->sendmb($weObj, $to_openid);
-
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . U('Demo/index/jd');
-        $rs = array('message' => 'hello', 'url' => $url);
-        $this->ajaxReturn($rs);
-
-//
+    public function test(){
+        $date = "04|30|1973";
+        $haha=explode('|',$date);
+        dump($haha);
     }
 
 }

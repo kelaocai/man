@@ -47,7 +47,7 @@
 
     <div class="weui_panel weui_panel_access">
         <div class="weui_panel_hd">订单模拟:{$orderno}</div>
-        <div class="weui_panel_hd">购买用户:{$wx_user['name']}</div>
+        <div class="weui_panel_hd">购买用户:{$wx_user.name}</div>
         <div class="weui_panel_bd">
             <div class="weui_media_box weui_media_text">
                 <h4 class="weui_media_title">产品名称:瑞享瘦</h4>
@@ -75,7 +75,8 @@
 
             <a href="javascript:;" class="weui_btn weui_btn_primary" id="button_tj" onclick="add_user()">购买</a>
 
-
+            <input type="hidden" id="openid" value="{$wx_user.openid}">
+            <input type="hidden" id="orderno" value="{$orderno}">
 
         </div>
         <!--<a href="javascript:void(0);" class="weui_panel_ft">查看更多</a>-->
@@ -145,17 +146,15 @@
     }
 
     function add_user() {
-        var email = $('#email').val();
-        var real_name = $('#real_name').val();
         var openid = $('#openid').val();
+        var orderno = $('#orderno').val();
 
         $('#loadingToast').css('display', 'block');
 
 
         $.post("?m=demo&c=index&a=createOrder",
                 {
-                    email: email,
-                    real_name: real_name,
+                    orderno: orderno,
                     openid: openid
                 },
                 function (data, status) {

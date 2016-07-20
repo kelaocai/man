@@ -32,14 +32,8 @@
     </div>
 
     <section>
-        <h2 class="title">送检中-20%</h2>
-        <section>
-            <h3>说明<i class="weui_icon_success_circle"></i></h3>
-            <p>本示例向用户展示当前报告的送检进度,可以通过进度条、业务节点、状态图等表现形式展示。
-                </p>
-            <p>本例使用进度条demo展示当前阶段进度百分比</p>
-
-        </section>
+        <h2 class="title">当前进度-{$order_progress}%</h2>
+        <p class="">{$order_status}<i class="weui_icon_success_circle"></i></p>
 
     </section>
 
@@ -47,23 +41,29 @@
     <div class="weui_panel">
         <!--<div class="weui_panel_hd">包菜地图</div>-->
 
-            <br>
+        <br>
 
-            <div class="weui_progress">
-                <div class="weui_progress_bar">
-                    <div class="weui_progress_inner_bar js_progress" style="width: 20%;"></div>
-                </div>
-                <!--<a href="javascript:;" class="weui_progress_opr">-->
-                    <!--<i class="weui_icon_cancel"></i>-->
-                <!--</a>-->
+        <div class="weui_progress">
+            <div class="weui_progress_bar">
+                <div class="weui_progress_inner_bar js_progress" style="width: {$order_progress}%;"></div>
             </div>
-
-            <br>
-
-            <a href="javascript:;" class="weui_btn weui_btn_primary" id="button_tj" onclick="tj()">确认</a>
+            <!--<a href="javascript:;" class="weui_progress_opr">-->
+            <!--<i class="weui_icon_cancel"></i>-->
+            <!--</a>-->
         </div>
 
+        <br>
+
+        <!--<a href="javascript:;" class="weui_btn weui_btn_primary" id="button_tj" onclick="tj()">确认</a>-->
     </div>
+    <h3>说明</h3>
+    <p>本示例向用户展示当前报告的送检进度,可以通过进度条、业务节点、状态图等表现形式展示。
+    </p>
+    <p>本例使用进度条demo展示当前阶段进度百分比</p>
+
+</div>
+
+
 
 </div>
 
@@ -126,20 +126,20 @@
         $('#weui_dialog').css('display', 'block');
     }
 
-//    wx.config({
-////        debug: true,
-//        appId: '{$js_sign['appId']}',// 必填，公众号的唯一标识
-//        timestamp: {$js_sign['timestamp']}, // 必填，生成签名的时间戳，切记时间戳是整数型，别加引号
-//        nonceStr: '{$js_sign['nonceStr']}', // 必填，生成签名的随机串
-//        signature: '{$js_sign['signature']}', // 必填，签名，见附录1
-//        jsApiList: [
-//            'checkJsApi',
-//            'onMenuShareTimeline',
-//            'onMenuShareAppMessage',
-//            'onMenuShareQQ',
-//            'onMenuShareWeibo'
-//        ]
-//    });
+    //    wx.config({
+    ////        debug: true,
+    //        appId: '{$js_sign['appId']}',// 必填，公众号的唯一标识
+    //        timestamp: {$js_sign['timestamp']}, // 必填，生成签名的时间戳，切记时间戳是整数型，别加引号
+    //        nonceStr: '{$js_sign['nonceStr']}', // 必填，生成签名的随机串
+    //        signature: '{$js_sign['signature']}', // 必填，签名，见附录1
+    //        jsApiList: [
+    //            'checkJsApi',
+    //            'onMenuShareTimeline',
+    //            'onMenuShareAppMessage',
+    //            'onMenuShareQQ',
+    //            'onMenuShareWeibo'
+    //        ]
+    //    });
 
 
     wx.ready(function () {
