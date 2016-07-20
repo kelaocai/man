@@ -11,6 +11,7 @@ class IndexController extends Controller
 
     const MENU_KEY_NEWUSER = 'newuser';
     const MENU_KEY_PROGRESS = 'progress';
+    const MENU_KEY_SCAN = 'scan';
 
 
     public function index()
@@ -30,17 +31,13 @@ class IndexController extends Controller
             'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
         ];
 
-        $HOST_URL = 'http://baocai.vip.natapp.cn';
+        $HOST_URL = 'http://' . $_SERVER['HTTP_HOST'];
 
         $weObj = new \Org\Wx\Wechat($options);
         $weObj->valid();
         $type = $weObj->getRev()->getRevType();
         switch ($type) {
             case \Org\Wx\Wechat::MSGTYPE_TEXT:
-
-
-//                $weObj->text("发送<a href='http://baocai.vip.natapp.cn/man/?m=demo&c=index&a=index'>aa</a>")->reply();
-//                $this->sendmb($weObj, 'oVT3TjgfVHR9Gryv4gco-ZcIBv4k');
                 exit;
                 break;
             case \Org\Wx\Wechat::MSGTYPE_EVENT:
@@ -51,14 +48,39 @@ class IndexController extends Controller
                             $user_openid = $weObj->getRev()->getRevFrom();
                             $url = $HOST_URL . U('Demo/index/index', array('openid' => $user_openid));
                             session('wx_user.openid', $user_openid);
-                            $weObj->text('Demo:' . "<a href='$url'>新用户注册</a>")->reply();
+                            $weObj->text("<a href='$url'>新用户注册,点击开始</a>")->reply();
                             break;
                         case MENU_KEY_PROGRESS:
-                            $url = $HOST_URL . U('Demo/index/jd');
-                            $weObj->text('Demo:' . "<a href='$url'>检测报告进度</a>")->reply();
+
+                            //取用户信息
+                            $user_openid = $weObj->getRev()->getRevFrom();
+                            $user = M("user", "ss_", "DB_CONFIG_APP");
+                            $map = array('openid' => $user_openid);
+                            $data_user = $user->where($map)->order('createdate desc')->find();
+                            //取最新的订单记录
+                            $orders= M("order", "ss_", "DB_CONFIG_APP");
+                            $map=array('userid'=>$data_user['id']);
+                            $order = $orders->where($map)->order('createdate desc')->find();
+
+                            $url = $HOST_URL . U('Demo/index/jd','kfid='.$order['kfid']);
+                            $progress_status=$order['status']*20;
+                            $weObj->text("<a href='$url'>检测报告进度[$progress_status%],点击查看</a>")->reply();
+                            break;
+
+                        case MENU_KEY_SCAN:
+                            $weObj->text($weObj->getRevScanInfo()['ScanResult'])->reply();
+                            break;
+
+
+                    }
+                }else{
+                    $event = $weObj->getRevEvent()['event'];
+                    switch ($event) {
+                        case EVENT_MENU_SCAN_WAITMSG:
+
                             break;
                     }
-                };
+                }
                 break;
             case \Org\Wx\Wechat::MSGTYPE_IMAGE:
                 break;
@@ -85,8 +107,11 @@ class IndexController extends Controller
 
         $btn_new = array('name' => '新用户注册', 'type' => 'click', 'key' => MENU_KEY_NEWUSER);
         $btn_jd = array('name' => '查看进度', 'type' => 'click', 'key' => MENU_KEY_PROGRESS);
+        $btn_scan = array('name' => '扫码条码', 'type' => 'scancode_waitmsg', 'key' => MENU_KEY_SCAN);
+
         $sub_btn[0] = $btn_new;
         $sub_btn[1] = $btn_jd;
+        $sub_btn[2] = $btn_scan;
 
         $newmenu = array(
             "button" =>
