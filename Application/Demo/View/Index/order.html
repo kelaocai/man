@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Demo-订单</title>
+    <style type="text/css">
+
+
+        #l-map {
+            height: 200px;
+            width: 100%;
+        }
+
+        #r-result {
+            width: 100%;
+        }
+    </style>
+    <link href="Public/css/wx.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css" rel="stylesheet">
+    <!--<link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">-->
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>-->
+    <!--<script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>-->
+
+    <![endif]-->
+</head>
+<body>
+
+
+<div class="container" style="max-width: 730px; margin: 10px;">
+
+
+    <div class="hd">
+        <a href="javascript:;">
+            <h1 class="page_title">订单模拟</h1>
+            <p class="page_desc">该页面模拟用户订购产品</p>
+        </a>
+    </div>
+
+
+    <div class="weui_panel weui_panel_access">
+        <div class="weui_panel_hd">订单模拟:{$orderno}</div>
+        <div class="weui_panel_hd">购买用户:{$wx_user['name']}</div>
+        <div class="weui_panel_bd">
+            <div class="weui_media_box weui_media_text">
+                <h4 class="weui_media_title">产品名称:瑞享瘦</h4>
+
+                <!--<p class="weui_media_desc">郑重承诺-->
+                <!--我们承诺此次基因检测结果是基于您本人本次提供的检测样本。<br>-->
+                <!--我们承诺未经您亲自允许我们不会将您的个人信息和基因检测结果透露给第三方或者用于任何商业用途。</p>-->
+                <br>
+                <p class="weui_media_desc">模拟提交一个订单,订单提交后,后台会模拟整个订单的工作流</p>
+
+
+                <!--<h3>1.1 节标题</h3>-->
+                <p>
+
+                <ol>
+                    <li>用户提交订单后,工作流启动</li>
+                    <li>后台审核人员会自动收到工单</li>
+                    <li>审核人员处理订单后,用户微信会收到模板消息</li>
+                    <li>订单后续状态变化,系统自动触发消息通知,通过(微信、邮件、短信)等方式同步通知用户</li>
+                </ol>
+                </p>
+
+
+            </div>
+
+            <a href="javascript:;" class="weui_btn weui_btn_primary" id="button_tj" onclick="add_user()">购买</a>
+
+
+
+        </div>
+        <!--<a href="javascript:void(0);" class="weui_panel_ft">查看更多</a>-->
+    </div>
+
+</div>
+
+<div id="loadingToast" class="weui_loading_toast" style="display:none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <div class="weui_loading">
+            <!-- :) -->
+            <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+        </div>
+        <p class="weui_toast_content">数据加载中</p>
+    </div>
+</div>
+
+<div id="weui_dialog" class="weui_dialog_alert" style="display:none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">提交成功</strong></div>
+        <div class="weui_dialog_bd">
+            <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
+            <div class="weui_text_area">
+                <h2 class="weui_msg_title"></h2>
+                <p class="weui_msg_desc weui_dialog_msg" id="weui_dialog_msg"></p>
+            </div>
+        </div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:void(0)" class="weui_btn_dialog primary" id="weui_btn_dialog_close">确定</a>
+        </div>
+    </div>
+</div>
+
+
+</div><!-- /.container -->
+
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=lB3MdI4HADGDT8trntoLxOWR"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
+
+<script type="text/javascript">
+
+
+    function close_dialog(url) {
+        $('#weui_dialog').css('display', 'none');
+        window.location.href = url;
+    }
+
+
+    function tj() {
+//        alert('a');
+        $('#weui_dialog').css('display', 'block');
+    }
+
+    function add_user() {
+        var email = $('#email').val();
+        var real_name = $('#real_name').val();
+        var openid = $('#openid').val();
+
+        $('#loadingToast').css('display', 'block');
+
+
+        $.post("?m=demo&c=index&a=createOrder",
+                {
+                    email: email,
+                    real_name: real_name,
+                    openid: openid
+                },
+                function (data, status) {
+                    if ($('#loadingToast').css('display', 'none')) {
+                        $('#weui_dialog_msg').html(data.message);
+                        $('#weui_btn_dialog_close').click(function () {
+                            close_dialog(data.url);
+                        })
+                        $('#weui_dialog').css('display', 'block');
+                    }
+                    ;
+
+
+                });
+    }
+
+    wx.ready(function () {
+//        alert("启动jsapi!");
+
+        wx.onMenuShareAppMessage({
+            title: 'Demo',
+            desc: '系统演示页面',
+            link: '{$js_url}',
+            imgUrl: 'http://auto.cri.cn/mmsource/images/2015/08/17/wb150713094.jpg',
+            trigger: function (res) {
+
+            },
+            success: function (res) {
+
+            },
+            cancel: function (res) {
+
+            },
+            fail: function (res) {
+
+            }
+        });
+
+        wx.onMenuShareTimeline({
+            title: 'Demo',
+            link: '{$js_url}',
+            imgUrl: 'http://auto.cri.cn/mmsource/images/2015/08/17/wb150713094.jpg',
+            trigger: function (res) {
+                // 用户确认分享后执行的回调函数
+            },
+            success: function (res) {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function (res) {
+                // 用户取消分享后执行的回调函数
+            },
+            fail: function (res) {
+            }
+        });
+
+
+    });
+
+
+</script>
+<!--<script src="Public/js/bj.js"></script>-->
+
+</body>
+</html>
