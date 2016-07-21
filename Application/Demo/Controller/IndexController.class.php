@@ -308,6 +308,23 @@ class IndexController extends Controller
 
     }
 
+
+    public function scan(){
+        $options = [
+            'token' => C('WX_TOKEN'),
+            'encodingaeskey' => C('WX_ENCODINGAESKEY'),
+            'appid' => C('WX_APPID'),
+            'appsecret' => C('WX_APPSECRET')
+        ];
+
+        $weObj = new \Org\Wx\Wechat($options);
+        
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $js_sign = $weObj->getJsSign($url);
+        $this->assign('js_sign', $js_sign);
+        $this->display();
+    }
+
     public function test(){
 //        $date = "04|30|1973";
 //        $haha=explode('|',$date);

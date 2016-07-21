@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Demo-扫描登记</title>
+
+    <!-- Bootstrap -->
+    <!--<link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="Public/css/wx.css" rel="stylesheet">-->
+    <link href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+
+<div class="container" style="max-width: 730px;">
+
+    <div class="hd">
+        <a href="javascript:;">
+            <h1 class="page_title">扫描条码</h1>
+            <p class="page_desc">用户基本信息采集/绑定条码</p>
+        </a>
+    </div>
+
+
+    <div class="weui_panel">
+        <!--<div class="weui_panel_hd">包菜地图</div>-->
+        <div class="weui_panel_bd">
+
+            <div class="weui_cell">
+                <div class="weui_cell_hd"><label class="weui_label">姓名</label></div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" id="real_name" placeholder="真实姓名" type="text">
+                </div>
+            </div>
+
+            <div class="weui_cell">
+            <div class="weui_cell_hd"><label class="weui_label">采样器编码</label></div>
+            <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" id="idno" placeholder="扫描后自动获取编码" type="text">
+            </div>
+            </div>
+
+
+            <br>
+
+
+            <br>
+
+            <a href="javascript:;" class="weui_btn weui_btn_primary" id="button_tj" onclick="add_user()">提交信息</a>
+        </div>
+
+    </div>
+    <div id="loadingToast" class="weui_loading_toast" style="display:none;">
+        <div class="weui_mask_transparent"></div>
+        <div class="weui_toast">
+            <div class="weui_loading">
+                <!-- :) -->
+                <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+            </div>
+            <p class="weui_toast_content">数据加载中...</p>
+        </div>
+    </div>
+
+    <div id="weui_dialog" class="weui_dialog_alert" style="display:none;">
+        <div class="weui_mask"></div>
+        <div class="weui_dialog">
+            <div class="weui_dialog_hd"><strong class="weui_dialog_title">查询结果</strong></div>
+            <div class="weui_dialog_bd" id="weui_dialog_msg"></div>
+            <div class="weui_dialog_ft">
+                <a href="javascript:void(0)" class="weui_btn_dialog primary" onclick="close_dialog()">确定</a>
+            </div>
+        </div>
+    </div>
+
+
+</div><!-- /.container -->
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
+<script type="text/javascript">
+
+    function switch_shop(id) {
+//        alert(id);
+        var shop_name = new Array('', '科兴旗舰店', '翰岭院');
+
+
+        $("#dropdownMenu1").html(shop_name[id] + '<span class="caret"></span>');
+        $("#shopid").val(id);
+    }
+
+    wx.config({
+//        debug: true,
+        appId: '{$js_sign['appId']}',// 必填，公众号的唯一标识
+        timestamp: {$js_sign['timestamp']}, // 必填，生成签名的时间戳，切记时间戳是整数型，别加引号
+        nonceStr: '{$js_sign['nonceStr']}', // 必填，生成签名的随机串
+        signature: '{$js_sign['signature']}', // 必填，签名，见附录1
+        jsApiList: [
+            'checkJsApi',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ',
+            'onMenuShareWeibo',
+            'hideMenuItems',
+            'showMenuItems',
+            'hideAllNonBaseMenuItem',
+            'showAllNonBaseMenuItem',
+            'translateVoice',
+            'startRecord',
+            'stopRecord',
+            'onRecordEnd',
+            'playVoice',
+            'pauseVoice',
+            'stopVoice',
+            'uploadVoice',
+            'downloadVoice',
+            'chooseImage',
+            'previewImage',
+            'uploadImage',
+            'downloadImage',
+            'getNetworkType',
+            'openLocation',
+            'getLocation',
+            'hideOptionMenu',
+            'showOptionMenu',
+            'closeWindow',
+            'scanQRCode',
+            'chooseWXPay',
+            'openProductSpecificView',
+            'addCard',
+            'chooseCard',
+            'openCard'
+        ]
+    });
+
+
+    wx.ready(function () {
+//        alert("启动jsapi!");
+
+        wx.onMenuShareAppMessage({
+            title: '快来和包菜仔一起开家气泡水店吧',
+            desc: '钱和想法都到位,就差你了,快来和包菜仔一起开家气泡水店吧',
+            link: 'http://baocai.us',
+            imgUrl: 'https://img.yzcdn.cn/upload_files/2016/03/02/a024791b49bdef8e2bb2ab03436f8e01.jpeg',
+            trigger: function (res) {
+                alert("点击分享：" + JSON.stringify(res));
+                // 用户确认分享后执行的回调函数
+            },
+            success: function (res) {
+                alert("分享成功：" + JSON.stringify(res));
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function (res) {
+                alert("取消分享：" + JSON.stringify(res));
+                // 用户取消分享后执行的回调函数
+            },
+            fail: function (res) {
+                alert("分享失败：" + JSON.stringify(res));
+            }
+        });
+
+        wx.onMenuShareTimeline({
+            title: '包菜仔召唤你,快来和包菜仔一起开家气泡水店吧',
+            link: 'http://baocai.us',
+            imgUrl: 'https://img.yzcdn.cn/upload_files/2016/03/02/a024791b49bdef8e2bb2ab03436f8e01.jpeg',
+            trigger: function (res) {
+                alert("点击分享：" + JSON.stringify(res));
+                // 用户确认分享后执行的回调函数
+            },
+            success: function (res) {
+                alert("分享成功：" + JSON.stringify(res));
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function (res) {
+                alert("取消分享：" + JSON.stringify(res));
+                // 用户取消分享后执行的回调函数
+            },
+            fail: function (res) {
+                alert("分享失败：" + JSON.stringify(res));
+            }
+        });
+
+
+    });
+
+
+    function get_zb() {
+        $('#loadingToast').css('display', 'block');
+        wx.getLocation({
+            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
+//                alert(latitude+','+longitude);
+                $.post("?m=home&c=index&a=find_baocai",
+                        {
+                            latitude: latitude,
+                            longitude: longitude
+                        },
+                        function (data, status) {
+                            if ($('#loadingToast').css('display', 'none')) {
+                                $('#weui_dialog_msg').html(data);
+                                $('#weui_dialog').css('display', 'block');
+                            }
+                            ;
+
+
+                        });
+            }
+        });
+
+    }
+
+    function close_dialog() {
+        $('#weui_dialog').css('display', 'none');
+    }
+
+    $(document).ready(function () {
+
+
+    });
+</script>
+</body>
+</html>
