@@ -23,6 +23,8 @@ define('APP_DEBUG', true);
 // 定义应用目录
 define('APP_PATH', './Application/');
 
+date_default_timezone_set('Asia/Shanghai');
+
 // 引入ThinkPHP入口文件
 require './vendor/autoload.php';
 require './ThinkPHP/ThinkPHP.php';

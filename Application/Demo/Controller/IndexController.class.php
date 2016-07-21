@@ -56,7 +56,7 @@ class IndexController extends Controller
                             $user_openid = $weObj->getRev()->getRevFrom();
                             $user = M("user", "ss_", "DB_CONFIG_APP");
                             $map = array('openid' => $user_openid);
-                            $data_user = $user->where($map)->order('createdate desc')->find();
+                            $data_user = $user->where($map)->order('id desc')->find();
                             //取最新的订单记录
                             $orders= M("order", "ss_", "DB_CONFIG_APP");
                             $map=array('userid'=>$data_user['id']);
@@ -195,7 +195,7 @@ class IndexController extends Controller
         $data['name'] = I('post.real_name');
         $data['openid'] = I('post.openid');
 //        $data['nickname']=I('post.real_name');
-        $data['createdate'] = date('y-m-d h:i:s', time());
+        $data['createdate'] = date('Y-m-d h:i:s', time());
         $bj->add($data);
         $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/order');
         $rs = array('message' => '', 'url' => $url);
@@ -229,7 +229,7 @@ class IndexController extends Controller
         $orderno = I('post.orderno');
         $user = M("user", "ss_", "DB_CONFIG_APP");
         $map = array('openid' => $openid);
-        $data_user = $user->where($map)->order('createdate desc')->find();
+        $data_user = $user->where($map)->order('id desc')->find();
 
 
         $kf_order = array(
@@ -242,7 +242,7 @@ class IndexController extends Controller
         $kf_id=$kf_data->ticket->id;
 
         $order = M("order", "ss_", "DB_CONFIG_APP");
-        $new_order = array('orderno' => $orderno, 'userid' => $data_user['id'], 'itemid' => '1', 'createdate' => date('y-m-d h:i:s', time()), 'status' => '0','kfid'=>$kf_id);
+        $new_order = array('orderno' => $orderno, 'userid' => $data_user['id'], 'itemid' => '1', 'createdate' => date('Y-m-d h:i:s', time()), 'status' => '0','kfid'=>$kf_id);
         $order->add($new_order);
 
         $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/jd','kfid='.$kf_id);
@@ -298,7 +298,7 @@ class IndexController extends Controller
 
         $users= M("user", "ss_", "DB_CONFIG_APP");
         $map=array('id'=>$order['userid']);
-        $user = $users->where($map)->order('createdate desc')->find();
+        $user = $users->where($map)->order('id desc')->find();
 
 
 
@@ -309,9 +309,11 @@ class IndexController extends Controller
     }
 
     public function test(){
-        $date = "04|30|1973";
-        $haha=explode('|',$date);
-        dump($haha);
+//        $date = "04|30|1973";
+//        $haha=explode('|',$date);
+//        dump($haha);
+
+        echo date('Y-m-d h:i:s', time());
     }
 
 }
