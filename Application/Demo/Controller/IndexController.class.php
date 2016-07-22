@@ -110,6 +110,7 @@ class IndexController extends Controller
         $btn_jd = array('name' => '查看进度', 'type' => 'click', 'key' => MENU_KEY_PROGRESS);
         $btn_scan = array('name' => '扫码条码', 'type' => 'scancode_waitmsg', 'key' => MENU_KEY_SCAN);
         $btn_bd = array('name' => '条码绑定', 'type' => 'view', 'url' => $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/scan'));
+        $btn_bd = array('name' => '自动生成报告', 'type' => 'view', 'url' => $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/word'));
 
         $sub_btn[0] = $btn_new;
         $sub_btn[1] = $btn_jd;
@@ -335,32 +336,28 @@ class IndexController extends Controller
         echo date('Y-m-d h:i:s', time());
     }
 
+
+
     public function word()
     {
-// New Word Document
-        $PHPWord = new \PHPWord();
-
-// New portrait section
-        $section = $PHPWord->createSection();
-
-// Add text elements
-        $section->addText('Hello World! 中文');
-        $section->addTextBreak(2);
-
-        $section->addText('I am inline styled.', array('name' => 'Verdana', 'color' => '006699'));
-        $section->addTextBreak(2);
-
-        $PHPWord->addFontStyle('rStyle', array('bold' => true, 'italic' => true, 'size' => 16));
-        $PHPWord->addParagraphStyle('pStyle', array('align' => 'center', 'spaceAfter' => 100));
-        $section->addText('I am styled by two style definitions.', 'rStyle', 'pStyle');
-        $section->addText('I have only a paragraph style definition.', null, 'pStyle');
-
-
-// Save File
-        $objWriter = \PHPWord_IOFactory::createWriter($PHPWord, 'Word2007');
-        $objWriter->save('Text.docx');
-
+        $this->display();
     }
 
+    public function genWord(){
+        //// New Word Document
+        $PHPWord = new \PHPWord();
+        $document = $PHPWord->loadTemplate('Public/template.docx');
+        $word_data=explode('|', I('post.word_data'));
+        foreach ($word_data as $key=>$value){
+            $document->setValue("value".($key+1), $value);
+        }
+
+        $document->save('Public/auto.docx');
+
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/man/Public/auto.docx';
+        $rs = array('msg' => '自动化报告已经生成', 'url' => $url);
+        $this->ajaxReturn($rs);
+
+    }
 
 }
