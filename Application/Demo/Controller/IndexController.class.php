@@ -108,10 +108,12 @@ class IndexController extends Controller
         $btn_new = array('name' => '新用户注册', 'type' => 'click', 'key' => MENU_KEY_NEWUSER);
         $btn_jd = array('name' => '查看进度', 'type' => 'click', 'key' => MENU_KEY_PROGRESS);
         $btn_scan = array('name' => '扫码条码', 'type' => 'scancode_waitmsg', 'key' => MENU_KEY_SCAN);
+        $btn_bd = array('name' => '条码绑定', 'type' => 'view', 'url' =>$url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/scan') );
 
         $sub_btn[0] = $btn_new;
         $sub_btn[1] = $btn_jd;
         $sub_btn[2] = $btn_scan;
+        $sub_btn[3] = $btn_bd;
 
         $newmenu = array(
             "button" =>
