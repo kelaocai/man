@@ -5,6 +5,7 @@ use Think\Controller;
 
 Vendor('kf5.Client');
 Vendor('kf5.core.apiRequire');
+Vendor('PhpWord.PHPWord');
 
 class IndexController extends Controller
 {
@@ -58,12 +59,12 @@ class IndexController extends Controller
                             $map = array('openid' => $user_openid);
                             $data_user = $user->where($map)->order('id desc')->find();
                             //取最新的订单记录
-                            $orders= M("order", "ss_", "DB_CONFIG_APP");
-                            $map=array('userid'=>$data_user['id']);
+                            $orders = M("order", "ss_", "DB_CONFIG_APP");
+                            $map = array('userid' => $data_user['id']);
                             $order = $orders->where($map)->order('createdate desc')->find();
 
-                            $url = $HOST_URL . U('Demo/index/jd','kfid='.$order['kfid']);
-                            $progress_status=$order['status']*20;
+                            $url = $HOST_URL . U('Demo/index/jd', 'kfid=' . $order['kfid']);
+                            $progress_status = $order['status'] * 20;
                             $weObj->text("<a href='$url'>检测报告进度[$progress_status%],点击查看</a>")->reply();
                             break;
 
@@ -73,7 +74,7 @@ class IndexController extends Controller
 
 
                     }
-                }else{
+                } else {
                     $event = $weObj->getRevEvent()['event'];
                     switch ($event) {
                         case EVENT_MENU_SCAN_WAITMSG:
@@ -108,7 +109,7 @@ class IndexController extends Controller
         $btn_new = array('name' => '新用户注册', 'type' => 'click', 'key' => MENU_KEY_NEWUSER);
         $btn_jd = array('name' => '查看进度', 'type' => 'click', 'key' => MENU_KEY_PROGRESS);
         $btn_scan = array('name' => '扫码条码', 'type' => 'scancode_waitmsg', 'key' => MENU_KEY_SCAN);
-        $btn_bd = array('name' => '条码绑定', 'type' => 'view', 'url' =>$url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/scan') );
+        $btn_bd = array('name' => '条码绑定', 'type' => 'view', 'url' => $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/scan'));
 
         $sub_btn[0] = $btn_new;
         $sub_btn[1] = $btn_jd;
@@ -125,7 +126,7 @@ class IndexController extends Controller
         echo "result:" . $result;
     }
 
-    private function sendmb($weObj, $to_openid, $msg,$url)
+    private function sendmb($weObj, $to_openid, $msg, $url)
     {
 
 //        $options = [
@@ -157,29 +158,29 @@ class IndexController extends Controller
     {
 
         //取订单信息
-        $orders= M("order", "ss_", "DB_CONFIG_APP");
-        $kf_id=I('get.kfid');
-        $map=array('kfid'=>$kf_id);
+        $orders = M("order", "ss_", "DB_CONFIG_APP");
+        $kf_id = I('get.kfid');
+        $map = array('kfid' => $kf_id);
         $order = $orders->where($map)->order('createdate desc')->find();
-        $this->assign('order_progress',$order['status']*20);
+        $this->assign('order_progress', $order['status'] * 20);
         switch ($order['status']) {
             case 1:
-                $this->assign('order_status','采样器寄出');
+                $this->assign('order_status', '采样器寄出');
                 break;
             case 2:
-                $this->assign('order_status','样品收到');
+                $this->assign('order_status', '样品收到');
                 break;
             case 3:
-                $this->assign('order_status','送检中');
+                $this->assign('order_status', '送检中');
                 break;
             case 4:
-                $this->assign('order_status','检测结果分析');
+                $this->assign('order_status', '检测结果分析');
                 break;
             case 5:
-                $this->assign('order_status','检测报告完成');
+                $this->assign('order_status', '检测报告完成');
                 break;
             default:
-                $this->assign('order_status','暂无进度');
+                $this->assign('order_status', '暂无进度');
         }
 
 
@@ -235,23 +236,21 @@ class IndexController extends Controller
 
 
         $kf_order = array(
-            'title' => '订单[' . $orderno . ']-瑞享瘦-'.$data_user['name'],
+            'title' => '订单[' . $orderno . ']-瑞享瘦-' . $data_user['name'],
             'comment' => array('content' => '订单[' . $orderno . ']'), 'requester' => array('email' => $data_user['email'], 'name' => $data_user['name'])
         );
 
         $kf_data = $kf->tickets()->create($kf_order);
 
-        $kf_id=$kf_data->ticket->id;
+        $kf_id = $kf_data->ticket->id;
 
         $order = M("order", "ss_", "DB_CONFIG_APP");
-        $new_order = array('orderno' => $orderno, 'userid' => $data_user['id'], 'itemid' => '1', 'createdate' => date('Y-m-d h:i:s', time()), 'status' => '0','kfid'=>$kf_id);
+        $new_order = array('orderno' => $orderno, 'userid' => $data_user['id'], 'itemid' => '1', 'createdate' => date('Y-m-d h:i:s', time()), 'status' => '0', 'kfid' => $kf_id);
         $order->add($new_order);
 
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/jd','kfid='.$kf_id);
-        $rs = array('message' =>$kf_id, 'url' => $url);
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/jd', 'kfid=' . $kf_id);
+        $rs = array('message' => $kf_id, 'url' => $url);
         $this->ajaxReturn($rs);
-
-
 
 
 //
@@ -260,7 +259,7 @@ class IndexController extends Controller
     public function hook()
     {
 
-       $msg=I('get.msg');
+        $msg = I('get.msg');
         $options = [
             'token' => C('WX_TOKEN'), //填写你设定的key
             'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
@@ -268,50 +267,50 @@ class IndexController extends Controller
             'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
         ];
 
-        $HOST_URL = 'http://' . $_SERVER['HTTP_HOST'] ;
+        $HOST_URL = 'http://' . $_SERVER['HTTP_HOST'];
 
-        $data=explode('|',$msg);
+        $data = explode('|', $msg);
 
         //取订单信息
-        $orders= M("order", "ss_", "DB_CONFIG_APP");
-        $kf_id=$data[1];
-        $map=array('kfid'=>$kf_id);
+        $orders = M("order", "ss_", "DB_CONFIG_APP");
+        $kf_id = $data[1];
+        $map = array('kfid' => $kf_id);
         $order = $orders->where($map)->order('createdate desc')->find();
         //更新订单信息
         switch ($data[0]) {
             case '采样器寄出':
-                $order['status']=1;
+                $order['status'] = 1;
                 break;
             case '样品收到':
-                $order['status']=2;
+                $order['status'] = 2;
                 break;
             case '送检中':
-                $order['status']=3;
+                $order['status'] = 3;
                 break;
             case '检测结果分析':
-                $order['status']=4;
+                $order['status'] = 4;
                 break;
             case '检测报告完成':
-                $order['status']=5;
+                $order['status'] = 5;
                 break;
         }
-        $orders->where('kfid='.$data[1])->save($order);
+        $orders->where('kfid=' . $data[1])->save($order);
 
 
-        $users= M("user", "ss_", "DB_CONFIG_APP");
-        $map=array('id'=>$order['userid']);
+        $users = M("user", "ss_", "DB_CONFIG_APP");
+        $map = array('id' => $order['userid']);
         $user = $users->where($map)->order('id desc')->find();
 
 
-
         $weObj = new \Org\Wx\Wechat($options);
-        $url = $HOST_URL . U('Demo/index/jd','kfid='.$kf_id);
-        $this->sendmb($weObj, $user['openid'],$data[0],$url);
+        $url = $HOST_URL . U('Demo/index/jd', 'kfid=' . $kf_id);
+        $this->sendmb($weObj, $user['openid'], $data[0], $url);
 
     }
 
 
-    public function scan(){
+    public function scan()
+    {
         $options = [
             'token' => C('WX_TOKEN'),
             'encodingaeskey' => C('WX_ENCODINGAESKEY'),
@@ -320,19 +319,48 @@ class IndexController extends Controller
         ];
 
         $weObj = new \Org\Wx\Wechat($options);
-        
+
         $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $js_sign = $weObj->getJsSign($url);
         $this->assign('js_sign', $js_sign);
         $this->display();
     }
 
-    public function test(){
+    public function test()
+    {
 //        $date = "04|30|1973";
 //        $haha=explode('|',$date);
 //        dump($haha);
 
         echo date('Y-m-d h:i:s', time());
     }
+
+    public function word()
+    {
+// New Word Document
+        $PHPWord = new \PHPWord();
+
+// New portrait section
+        $section = $PHPWord->createSection();
+
+// Add text elements
+        $section->addText('Hello World! 中文');
+        $section->addTextBreak(2);
+
+        $section->addText('I am inline styled.', array('name' => 'Verdana', 'color' => '006699'));
+        $section->addTextBreak(2);
+
+        $PHPWord->addFontStyle('rStyle', array('bold' => true, 'italic' => true, 'size' => 16));
+        $PHPWord->addParagraphStyle('pStyle', array('align' => 'center', 'spaceAfter' => 100));
+        $section->addText('I am styled by two style definitions.', 'rStyle', 'pStyle');
+        $section->addText('I have only a paragraph style definition.', null, 'pStyle');
+
+
+// Save File
+        $objWriter = \PHPWord_IOFactory::createWriter($PHPWord, 'Word2007');
+        $objWriter->save('Text.docx');
+
+    }
+
 
 }
