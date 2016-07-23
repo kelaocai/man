@@ -110,12 +110,13 @@ class IndexController extends Controller
         $btn_jd = array('name' => '查看进度', 'type' => 'click', 'key' => MENU_KEY_PROGRESS);
         $btn_scan = array('name' => '扫码条码', 'type' => 'scancode_waitmsg', 'key' => MENU_KEY_SCAN);
         $btn_bd = array('name' => '条码绑定', 'type' => 'view', 'url' => $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/scan'));
-        $btn_bd = array('name' => '自动生成报告', 'type' => 'view', 'url' => $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/word'));
+        $btn_report = array('name' => '自动生成报告', 'type' => 'view', 'url' => $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/word'));
 
         $sub_btn[0] = $btn_new;
         $sub_btn[1] = $btn_jd;
         $sub_btn[2] = $btn_scan;
         $sub_btn[3] = $btn_bd;
+        $sub_btn[4] = $btn_report;
 
         $newmenu = array(
             "button" =>
