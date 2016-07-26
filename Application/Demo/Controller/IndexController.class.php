@@ -32,14 +32,18 @@ class IndexController extends Controller
             'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
         ];
 
+
+
         $HOST_URL = 'http://' . $_SERVER['HTTP_HOST'];
 
         $weObj = new \Org\Wx\Wechat($options);
         $weObj->valid();
         $type = $weObj->getRev()->getRevType();
+
+//        \Think\Log::record('wkl test'.$weObj->getRev()->getRevType(),'WARN');
         switch ($type) {
             case \Org\Wx\Wechat::MSGTYPE_TEXT:
-                exit;
+                $weObj->text('okok')->reply();
                 break;
             case \Org\Wx\Wechat::MSGTYPE_EVENT:
                 if ($key = $weObj->getRevEvent()['key']) {
@@ -76,9 +80,20 @@ class IndexController extends Controller
                     }
                 } else {
                     $event = $weObj->getRevEvent()['event'];
+                    \Think\Log::record('测试日志信息，lala'.$event,'WARN');
                     switch ($event) {
-                        case EVENT_MENU_SCAN_WAITMSG:
+                        case \Org\Wx\Wechat::EVENT_CARD_USER_GET:
+                            $card=$weObj->getRev()->getRevCardGet();
+                            \Think\Log::record('卡券领取，code:'.$card['UserCardCode'],'WARN');
+                            break;
 
+                        case  \Org\Wx\Wechat::EVENT_CARD_PASS:
+                            $cardid=$weObj->getRev()->getRevCardPass();
+                            \Think\Log::record('卡券审核通过，cardid'.$cardid,'WARN');
+                            break;
+                        case  \Org\Wx\Wechat::EVENT_CARD_NOTPASS:
+                            $cardid=$weObj->getRev()->getRevCardPass();
+                            \Think\Log::record('卡券未通过，cardid'.$cardid,'WARN');
                             break;
                     }
                 }
@@ -330,11 +345,18 @@ class IndexController extends Controller
 
     public function test()
     {
-//        $date = "04|30|1973";
-//        $haha=explode('|',$date);
-//        dump($haha);
 
-        echo date('Y-m-d h:i:s', time());
+
+        $options = [
+            'token' => C('WX_TOKEN'),
+            'encodingaeskey' => C('WX_ENCODINGAESKEY'),
+            'appid' => C('WX_APPID'),
+            'appsecret' => C('WX_APPSECRET')
+        ];
+
+        $weObj = new \Org\Wx\Wechat($options);
+        echo 'appid:'.C('WX_APPID').'<br>';
+        echo $weObj->checkAuth();
     }
 
 
@@ -359,6 +381,39 @@ class IndexController extends Controller
         $rs = array('msg' => '自动化报告已经生成', 'url' => $url);
         $this->ajaxReturn($rs);
 
+    }
+
+    public function activeMember(){
+        $options = [
+            'token' => C('WX_TOKEN'),
+            'encodingaeskey' => C('WX_ENCODINGAESKEY'),
+            'appid' => C('WX_APPID'),
+            'appsecret' => C('WX_APPSECRET')
+        ];
+
+        $weObj = new \Org\Wx\Wechat($options);
+        $number='714462424310';
+//        $data=array(
+//            'membership_number'=>$number,
+//            'code'=>$number,
+//        );
+//         if($weObj->activateMemberCard($data)){
+//             echo ('true');
+//         }else{
+//             echo ('false');
+//         }
+
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $js_sign = $weObj->getJsSign($url);
+        $this->assign('js_sign', $js_sign);
+        $this->display();
+//        echo $weObj->checkAuth();
+
+
+    }
+
+    public function memberLevel(){
+        echo('memberLevel');
     }
 
 }
