@@ -33,20 +33,19 @@ class IndexController extends Controller
         ];
 
 
-
         $HOST_URL = 'http://' . $_SERVER['HTTP_HOST'];
 
         $weObj = new \Org\Wx\Wechat($options);
         $weObj->valid();
         $type = $weObj->getRev()->getRevType();
-
-//        \Think\Log::record('wkl test'.$weObj->getRev()->getRevType(),'WARN');
+        \Think\Log::record('微信消息代码:' . $type, 'INFO');
         switch ($type) {
             case \Org\Wx\Wechat::MSGTYPE_TEXT:
                 $weObj->text('okok')->reply();
                 break;
             case \Org\Wx\Wechat::MSGTYPE_EVENT:
-                if ($key = $weObj->getRevEvent()['key']) {
+                if (isset($weObj->getRevEvent()['key'])) {
+                    $key = $weObj->getRevEvent()['key'];
                     switch ($key) {
                         case MENU_KEY_NEWUSER:
 
@@ -80,20 +79,21 @@ class IndexController extends Controller
                     }
                 } else {
                     $event = $weObj->getRevEvent()['event'];
-                    \Think\Log::record('测试日志信息，lala'.$event,'WARN');
+                    \Think\Log::record('微信事件代码:' . $event, 'INFO');
                     switch ($event) {
                         case \Org\Wx\Wechat::EVENT_CARD_USER_GET:
-                            $card=$weObj->getRev()->getRevCardGet();
-                            \Think\Log::record('卡券领取，code:'.$card['UserCardCode'],'WARN');
+                            $card = $weObj->getRev()->getRevCardGet();
+                            $user_openid = $weObj->getRev()->getRevFrom();
+                            \Think\Log::record('卡券领取:' . $user_openid . '，code:' . $card['UserCardCode'], 'WARN');
                             break;
 
                         case  \Org\Wx\Wechat::EVENT_CARD_PASS:
-                            $cardid=$weObj->getRev()->getRevCardPass();
-                            \Think\Log::record('卡券审核通过，cardid'.$cardid,'WARN');
+                            $cardid = $weObj->getRev()->getRevCardPass();
+                            \Think\Log::record('卡券审核通过，cardid' . $cardid, 'WARN');
                             break;
                         case  \Org\Wx\Wechat::EVENT_CARD_NOTPASS:
-                            $cardid=$weObj->getRev()->getRevCardPass();
-                            \Think\Log::record('卡券未通过，cardid'.$cardid,'WARN');
+                            $cardid = $weObj->getRev()->getRevCardPass();
+                            \Think\Log::record('卡券未通过，cardid' . $cardid, 'WARN');
                             break;
                     }
                 }
@@ -355,10 +355,9 @@ class IndexController extends Controller
         ];
 
         $weObj = new \Org\Wx\Wechat($options);
-        echo 'appid:'.C('WX_APPID').'<br>';
+        echo 'appid:' . C('WX_APPID') . '<br>';
         echo $weObj->checkAuth();
     }
-
 
 
     public function word()
@@ -366,13 +365,14 @@ class IndexController extends Controller
         $this->display();
     }
 
-    public function genWord(){
+    public function genWord()
+    {
         //// New Word Document
         $PHPWord = new \PHPWord();
         $document = $PHPWord->loadTemplate('Public/template.docx');
-        $word_data=explode('|', I('post.word_data'));
-        foreach ($word_data as $key=>$value){
-            $document->setValue("value".($key+1), $value);
+        $word_data = explode('|', I('post.word_data'));
+        foreach ($word_data as $key => $value) {
+            $document->setValue("value" . ($key + 1), $value);
         }
 
         $document->save('Public/auto.docx');
@@ -383,7 +383,8 @@ class IndexController extends Controller
 
     }
 
-    public function activeMember(){
+    public function activeMember()
+    {
         $options = [
             'token' => C('WX_TOKEN'),
             'encodingaeskey' => C('WX_ENCODINGAESKEY'),
@@ -392,16 +393,21 @@ class IndexController extends Controller
         ];
 
         $weObj = new \Org\Wx\Wechat($options);
-        $number='714462424310';
-//        $data=array(
-//            'membership_number'=>$number,
-//            'code'=>$number,
-//        );
-//         if($weObj->activateMemberCard($data)){
-//             echo ('true');
-//         }else{
-//             echo ('false');
-//         }
+        $card_list=$weObj->getCardCodeList(I('get.openid'),I('get.card_id'));
+        if(isset($card_list[1])){
+            $card_code= $card_list[1]['code'];
+            $data = array(
+                'membership_number' => $card_code,
+                'code' => $card_code
+            );
+            if ($weObj->activateMemberCard($data)) {
+                echo('true');
+            } else {
+                echo('false');
+            }
+        }
+
+
 
         $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $js_sign = $weObj->getJsSign($url);
@@ -412,8 +418,52 @@ class IndexController extends Controller
 
     }
 
-    public function memberLevel(){
+    public function memberLevel()
+    {
         echo('memberLevel');
     }
+
+    public function card()
+    {
+        $options = [
+            'token' => C('WX_TOKEN'),
+            'encodingaeskey' => C('WX_ENCODINGAESKEY'),
+            'appid' => C('WX_APPID'),
+            'appsecret' => C('WX_APPSECRET')
+        ];
+
+        $weObj = new \Org\Wx\Wechat($options);
+
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $js_sign = $weObj->getJsSign($url);
+        $js_card_ticket=$weObj->getJsCardTicket();
+        $timestamp=time();
+        $nonce_str=$weObj->generateNonceStr();
+        $ext=array('api_ticket'=>$js_card_ticket,'timestamp'=>$timestamp,'nonce_str'=>$nonce_str,'card_id'=>'pNo0ot4r6de4pms2Mm_wz-NOts0E');
+        $sign = $weObj->getTicketSignature($ext);
+        $cardExt=array('timestamp'=>$timestamp,'nonce_str'=>$nonce_str,'signature'=>$sign);
+        $this->assign('js_sign', $js_sign);
+        $this->assign('js_card_ticket', $js_card_ticket);
+        $this->assign('js_card_ext', json_encode($cardExt,true));
+        $this->display();
+    }
+
+    public function getCardCode(){
+
+        $options = [
+            'token' => C('WX_TOKEN'),
+            'encodingaeskey' => C('WX_ENCODINGAESKEY'),
+            'appid' => C('WX_APPID'),
+            'appsecret' => C('WX_APPSECRET')
+        ];
+
+        $weObj = new \Org\Wx\Wechat($options);
+        $rs=$weObj->getCardCodeList('oNo0ot8XsANeeMTOXqRc112LcF6I','pNo0ot4r6de4pms2Mm_wz-NOts0E');
+
+
+    }
+
+
+
 
 }

@@ -81,6 +81,7 @@ class Wechat
 	const MENU_GET_URL = '/menu/get?';
 	const MENU_DELETE_URL = '/menu/delete?';
 	const GET_TICKET_URL = '/ticket/getticket?';
+	const GET_CARDCODE_URL = '/card/user/getcardlist?';
 	const CALLBACKSERVER_GET_URL = '/getcallbackip?';
 	const QRCODE_CREATE_URL='/qrcode/create?';
 	const QR_SCENE = 0;
@@ -1433,6 +1434,33 @@ class Wechat
 		sort($newArray,SORT_STRING);
 		return $method(implode($newArray));
 	}
+
+
+    /**
+     * 获取已领取卡券列表
+     * @param string $openid 用户openid
+     * @param string $cardid 卡券id
+     * @return string cardno
+     */
+    public function getCardCodeList($openid='',$cardid=''){
+        if (!$this->access_token && !$this->checkAuth()) return false;
+        $data=array('openid'=>$openid,'card_id'=>$cardid);
+        $result = $this->http_post(self::API_BASE_URL_PREFIX.self::GET_CARDCODE_URL.'access_token='.$this->access_token,self::json_encode($data));
+        if ($result)
+        {
+            $json = json_decode($result,true);
+            if (!$json || !empty($json['errcode'])) {
+                $this->errCode = $json['errcode'];
+                $this->errMsg = $json['errmsg'];
+                return $this->errMsg;
+            }
+
+            return $json['card_list'];
+        }
+        return false;
+    }
+
+
 
 	/**
 	 * 生成随机字串
