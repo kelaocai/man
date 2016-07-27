@@ -689,7 +689,7 @@ class IndexController extends Controller
     public function bj(){
         $bj= M("bj", "ss_", "DB_CONFIG_APP");
         $data['data']=$_POST['lat'].','.$_POST['lng'];
-        $data['time']=date('Y-m-d h:i:s',time());
+        $data['time']=date('Y-m-d H:i:s',time());
         $bj->add($data);
 //        echo time();
     }
