@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Demo-weui</title>
+
+    <!-- Bootstrap -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Public/css/wx.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <![endif]-->
+
+</head>
+<body>
+
+
+<div id="container" ontouchstart="" huaban_collector_injected="true" style="" >
+
+    <!--<br>-->
+
+    <!--<a href="#/demo" class="weui_btn weui_btn_primary" id="button_demo">demo</a>-->
+    <!--&lt;!&ndash;<a href="#/demo" class="weui_btn weui_btn_primary" id="button_tj">提交信息</a>&ndash;&gt;-->
+
+</div>
+
+<script type="text/html" id="tpl_home">
+
+    <div class="hd">
+        <a href="javascript:;">
+            <h1 class="page_title">weui</h1>
+            <p class="page_desc"><a href="#/demo">weui-demo</a></p>
+        </a>
+    </div>
+</script>
+
+<script type="text/html" id="tpl_demo">
+
+    <div class="hd">
+        <a href="javascript:;">
+            <h1 class="page_title">demo</h1>
+            <p class="page_desc"><a href="#/">weui-home</a></p>
+        </a>
+    </div>
+
+    <div class="weui_panel">
+        <!--<div class="weui_panel_hd">包菜地图</div>-->
+        <div class="weui_panel_bd">
+
+            <div class="weui_cell">
+                <div class="weui_cell_hd"><label class="weui_label">姓名</label></div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" id="real_name" placeholder="真实姓名" type="text">
+                </div>
+            </div>
+
+
+            <div class="weui_cell weui_vcode">
+                <div class="weui_cell_hd"><label class="weui_label">采样器编码</label></div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" type="text" placeholder="扫描后自动获取编码" id="rs_scan" value="">
+                </div>
+                <div class="weui_cell_ft">
+                    <a href="#"
+                       class="weui_btn weui_btn_mini weui_btn_primary" id="btn_scan">扫码</a>
+                </div>
+            </div>
+        </div>
+
+
+        <br>
+
+
+        <br>
+
+        <!--<a href="javascript:;" class="weui_btn weui_btn_primary" id="button_tj" onclick="add_user()">提交信息</a>-->
+    </div>
+
+</script>
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+<script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<!--<script src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>-->
+<script src="Public/js/weui/weui.min.js"></script>
+
+<!--<script src="Public/js/router/zepto.min.js"></script>-->
+<script src="Public/js/router/router.min.js"></script>
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+        var router = new Router({
+            container: '#container',
+            enterTimeout: 50,
+            leaveTimeout: 50
+        });
+
+
+        var home = {
+            url: '/',
+            className: 'home',
+            render: function () {
+                return $('#tpl_home').html();
+            }
+        };
+        var demo = {
+            url: '/demo',
+            className: 'demo',
+            render: function () {
+                return $('#tpl_demo').html();
+            }
+        };
+
+        router.push(home).push(demo);
+        router.setDefault('/');
+        router.init();
+
+
+    });
+</script>
+</body>
+</html>

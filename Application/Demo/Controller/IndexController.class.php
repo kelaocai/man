@@ -19,6 +19,7 @@ class IndexController extends Controller
     {
         $this->assign('openid', I('get.openid'));
         $this->display();
+//        echo ('index');
     }
 
 
@@ -461,6 +462,10 @@ class IndexController extends Controller
         $rs=$weObj->getCardCodeList('oNo0ot8XsANeeMTOXqRc112LcF6I','pNo0ot4r6de4pms2Mm_wz-NOts0E');
 
 
+    }
+
+    public function weui(){
+        $this->display();
     }
 
 
