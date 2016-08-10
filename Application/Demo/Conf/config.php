@@ -6,5 +6,4 @@ return array(
     'KF_EMAIL'=>'kelaocai@163.com',
     'KF_TOKEN'=>'ac36ec15847c14496dc47f8ababb25',
     'KF_PASSWORD'=>'3edc4rfv'
-
 );

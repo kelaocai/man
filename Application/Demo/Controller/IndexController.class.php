@@ -42,7 +42,7 @@ class IndexController extends Controller
         \Think\Log::record('微信消息代码:' . $type, 'INFO');
         switch ($type) {
             case \Org\Wx\Wechat::MSGTYPE_TEXT:
-                $weObj->text('okok')->reply();
+                $weObj->text('okok1111')->reply();
                 break;
             case \Org\Wx\Wechat::MSGTYPE_EVENT:
                 if (isset($weObj->getRevEvent()['key'])) {
@@ -258,17 +258,25 @@ class IndexController extends Controller
             'comment' => array('content' => '订单[' . $orderno . ']'), 'requester' => array('email' => $data_user['email'], 'name' => $data_user['name'])
         );
 
+
         $kf_data = $kf->tickets()->create($kf_order);
 
         $kf_id = $kf_data->ticket->id;
 
+
+
         $order = M("order", "ss_", "DB_CONFIG_APP");
         $new_order = array('orderno' => $orderno, 'userid' => $data_user['id'], 'itemid' => '1', 'createdate' => date('Y-m-d h:i:s', time()), 'status' => '0', 'kfid' => $kf_id);
-        $order->add($new_order);
+        if($order->add($new_order)){
+            $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/jd', 'kfid=' . $kf_id);
+            $rs = array('message' => $kf_id, 'url' => $url);
 
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/jd', 'kfid=' . $kf_id);
-        $rs = array('message' => $kf_id, 'url' => $url);
+        };
+
         $this->ajaxReturn($rs);
+
+
+
 
 
 //
@@ -466,6 +474,28 @@ class IndexController extends Controller
 
     public function weui(){
         $this->display();
+    }
+
+    public function kf(){
+
+        $kf_domain = C('KF_DOMAIN');
+        $kf_email = C('KF_EMAIL');
+        $kf_token = C('KF_TOKEN');
+        $kf_password = C('KF_PASSWORD');
+
+        $kf = new \Client($kf_domain, $kf_email);
+        $kf->setAuth('password', $kf_password);
+
+        $kf_order = array(
+            'title' => '订单[' . 'xxx' . ']-瑞享瘦-' . 'test',
+            'comment' => array('content' => '订单[' . 'xxx' . ']'), 'requester' => array('email' => 'kelaocai@163.com', 'name' => '测试一下')
+        );
+
+        \Think\Log::record('start:' , 'INFO');
+
+        $kf_data = $kf->tickets()->create($kf_order);
+
+        dump($kf_data);
     }
 
 

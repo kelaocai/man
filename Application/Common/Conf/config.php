@@ -49,12 +49,12 @@ return array(
 //    'WX_APPSECRET'=>'57fb691b606420fe6d9bec9ef5c69274',//baocaizai生产
 //    'WX_APPID'=>'wx4e4b57848ce1ced4',//yikebaocai生产
 //    'WX_APPSECRET'=>'c94fd3da4d006277fe09d90d9d438202',//yikebaocai生产
-//    'WX_APPID' => 'wx8e9af23cb8d804e8',//测试
-//    'WX_APPSECRET' => '3208fc5407922bd7e3327f78febaa6eb',//测试
+    'WX_APPID' => 'wx8e9af23cb8d804e8',//测试
+    'WX_APPSECRET' => '3208fc5407922bd7e3327f78febaa6eb',//测试
 
-    'WX_APPID' => 'wxb595d641246eb016',//包菜网生产
-    'WX_APPSECRET' => '52fe7f6d89fc0bc2796a86f6a8a00c19',//包菜网生产
-    'WX_ENCODINGAESKEY' => 'H6BEjGmD3iW7QtTXKLVvqCwIO3urpJLW6yduXST9fjt',//包菜网生产
+//    'WX_APPID' => 'wxb595d641246eb016',//包菜网生产
+//    'WX_APPSECRET' => '52fe7f6d89fc0bc2796a86f6a8a00c19',//包菜网生产
+//    'WX_ENCODINGAESKEY' => 'H6BEjGmD3iW7QtTXKLVvqCwIO3urpJLW6yduXST9fjt',//包菜网生产
 
 
 );
