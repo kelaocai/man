@@ -4,6 +4,7 @@ namespace Baocai\Controller;
 use Think\Controller;
 
 Vendor('kf5.Client');
+Vendor('SensorsAnalytics.SensorsAnalytics');
 Vendor('kf5.core.apiRequire');
 
 
@@ -11,7 +12,7 @@ class IndexController extends Controller
 {
     public function index()
     {
-
+        $this->display();
     }
 
     public function tj()
@@ -110,6 +111,33 @@ class IndexController extends Controller
 //以下内容正常输出在页面文件中
         header("Content-type:text/html;charset=utf-8");
         echo 'data.doc生成成功，请到目录下查看<br>';
+    }
+
+    public function sa()
+    {
+
+        # 从 Sensors Analytics 配置页面中获取的数据接收的 URL
+        $SA_SERVER_URL = 'http://yikebaocai.cloud.sensorsdata.cn:8006/sa?token=5719721cfbe1ddf7';
+
+        # 初始化一个 Consumer，用于数据发送
+        $consumer = new \BatchConsumer($SA_SERVER_URL);
+        # 使用 Consumer 来构造 SensorsAnalytics 对象
+        $sa = new \SensorsAnalytics($consumer);
+
+        # 记录用户登录事件
+        $distinct_id = 'ABCDEF123452324';
+
+        $properties=['ShopName'=>'科兴旗舰店','Member'=>'2','Sex'=>'1'];
+        $sa->track($distinct_id, 'UserLogin',$properties);
+        $sa->track($distinct_id, 'ViewProduct');
+
+
+
+        $sa->close();
+
+        echo 'ok';
+
+
     }
 
 
