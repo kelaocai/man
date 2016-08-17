@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Demo-订单</title>
+    <style type="text/css">
+
+
+        #l-map {
+            height: 200px;
+            width: 100%;
+        }
+
+        #r-result {
+            width: 100%;
+        }
+    </style>
+    <link href="Public/css/wx.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css" rel="stylesheet">
+    <!--<link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">-->
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>-->
+    <!--<script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>-->
+
+    <![endif]-->
+</head>
+<body>
+
+
+<div class="container" style="max-width: 730px; margin: 10px;">
+
+
+    <div class="hd">
+        <a href="javascript:;">
+            <h1 class="page_title">一颗包菜/神策模拟</h1>
+            <p class="page_desc">Demo</p>
+        </a>
+    </div>
+
+    <div class="weui_cell">
+        <div class="weui_cell_hd"><label class="weui_label">模拟新用户</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" id="cnt" placeholder="输入模拟人数" type="number">
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_media_box weui_media_text">
+
+            <p class="weui_media_desc">模拟用户注册,登录,访问页面行为,记录相关事件</p>
+
+        </div>
+        <a href="javascript:;" class="weui_btn weui_btn_primary weui_btn_mini" id="button_tj"
+           onclick="sa_newuser()">提交</a>
+
+    </div>
+
+    <div class="weui_cell">
+        <div class="weui_cell_hd"><label class="weui_label">模拟行为序列</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" id="name" placeholder="用户名" type="text">
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_media_box weui_media_text">
+
+            <p class="weui_media_desc">模拟用户在全站自由访问的过程,记录行为序列</p>
+
+        </div>
+        <a href="javascript:;" class="weui_btn weui_btn_primary weui_btn_mini" id="button_tj2"
+           onclick="sa_newuser()">提交</a>
+
+    </div>
+
+</div>
+
+<div id="loadingToast" class="weui_loading_toast" style="display:none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <div class="weui_loading">
+            <!-- :) -->
+            <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+        </div>
+        <p class="weui_toast_content">数据加载中</p>
+    </div>
+</div>
+
+<div id="weui_dialog" class="weui_dialog_alert" style="display:none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">提交成功</strong></div>
+        <div class="weui_dialog_bd">
+            <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
+            <div class="weui_text_area">
+                <h2 class="weui_msg_title"></h2>
+                <p class="weui_msg_desc weui_dialog_msg" id="weui_dialog_msg"></p>
+            </div>
+        </div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:void(0)" class="weui_btn_dialog primary" id="weui_btn_dialog_close">确定</a>
+        </div>
+    </div>
+</div>
+
+
+</div><!-- /.container -->
+
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=lB3MdI4HADGDT8trntoLxOWR"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
+
+<script type="text/javascript">
+
+
+    function close_dialog(url) {
+        $('#weui_dialog').css('display', 'none');
+    }
+
+
+    function tj() {
+//        alert('a');
+        $('#weui_dialog').css('display', 'block');
+    }
+
+    function sa_newuser() {
+        var cnt = $('#cnt').val();
+
+        $('#loadingToast').css('display', 'block');
+
+
+        $.post("?m=baocai&c=index&a=sa_newuser",
+                {
+                    cnt: cnt
+                },
+                function (data, status) {
+                    if ($('#loadingToast').css('display', 'none')) {
+                        $('#weui_dialog_msg').html(data.message);
+                        $('#weui_btn_dialog_close').click(function () {
+                            close_dialog(data.url);
+                        })
+                        $('#weui_dialog').css('display', 'block');
+                    }
+                    ;
+
+
+                });
+    }
+
+    wx.ready(function () {
+//        alert("启动jsapi!");
+
+        wx.onMenuShareAppMessage({
+            title: 'Demo',
+            desc: '系统演示页面',
+            link: '{$js_url}',
+            imgUrl: 'http://auto.cri.cn/mmsource/images/2015/08/17/wb150713094.jpg',
+            trigger: function (res) {
+
+            },
+            success: function (res) {
+
+            },
+            cancel: function (res) {
+
+            },
+            fail: function (res) {
+
+            }
+        });
+
+        wx.onMenuShareTimeline({
+            title: 'Demo',
+            link: '{$js_url}',
+            imgUrl: 'http://auto.cri.cn/mmsource/images/2015/08/17/wb150713094.jpg',
+            trigger: function (res) {
+                // 用户确认分享后执行的回调函数
+            },
+            success: function (res) {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function (res) {
+                // 用户取消分享后执行的回调函数
+            },
+            fail: function (res) {
+            }
+        });
+
+
+    });
+
+
+</script>
+<!--<script src="Public/js/bj.js"></script>-->
+
+</body>
+</html>
