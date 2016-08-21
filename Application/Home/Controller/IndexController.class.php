@@ -6,7 +6,7 @@ use Think\Controller;
 use Think\Log\Driver\Sae;
 use Think\Think;
 
-include 'FeyinAPI.php';
+Vendor('Feyin.FeyinAPI');
 Vendor('Kdt.lib.SimpleHttpClient');
 Vendor('Kdt.lib.KdtApiClient');
 Vendor('Kdt.lib.KdtApiOauthClient');
@@ -113,7 +113,10 @@ class IndexController extends Controller
                             $order_info = $weObj->getOrderByID($order_id);
                             \Think\Log::record('order_info' . json_encode($order_info), 'WARN');
 
-                            $prd_name=explode('$',$order_info['product_sku']);
+//                            $prd_name=explode('$',$order_info['product_sku']);
+                            $prd_name=$order_info['product_name'];
+                            $prd_price=$order_info['product_price'];
+                            $prd_count=$order_info['product_count'];
 
                             $msgInfo = array (
                                 'memberCode'=>MEMBER_CODE,
@@ -122,7 +125,7 @@ class IndexController extends Controller
                                 'customerPhone'=>$order_info['receiver_mobile'],
                                 'customerAddress'=>$order_info['receiver_province'].$order_info['receiver_address'],
                                 'customerMemo'=>'请快点送货',
-                                'msgDetail'=>$prd_name[2].'@'.$order_info['product_price'].'@'.$order_info['product_count']
+                                'msgDetail'=>$prd_name.'@10'.'@'.$prd_count
                             );
 
                             $this->printXp($msgInfo);

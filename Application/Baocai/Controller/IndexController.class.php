@@ -248,38 +248,26 @@ class IndexController extends Controller
         $client = new \KdtApiClient($appId, $appSecret);
 
 
-        $method = 'kdt.trades.sold.get';
-        $params = [
-            'page_size' => 50,
-            'status'=>'WAIT_BUYER_CONFIRM_GOODS',
-            'start_created'=>'2016-07-01'
-        ];
-
-
-        $rs = $client->get($method, $params);
-        echo "<meta http-equiv='Content-Type'' content='text/html; charset=utf-8'>";
-        foreach ($rs as $key => $val) {
-            foreach ($val['trades'] as $key2 => $val2) {
-                foreach ($val2['orders'] as $key3=>$val3){
-                    echo ($val3['sku_properties_name'] . '--' . $val2['payment']. '--' . $val2['num']).'<br>' . '<br>';
-                }
-
-            }
-
-        }
+        $method = 'kdt.shop.basic.get';
+        $rs = $client->get($method, null);
+        dump($rs);
 
 
     }
     public function kdt_user()
     {
-        $appId = '2c61af3095a3518214';
-        $appSecret = '0ee9bfdeced099f98ad0c714f365fc0f';
+//        $appId = '2c61af3095a3518214';
+//        $appSecret = '0ee9bfdeced099f98ad0c714f365fc0f';
+
+        $appId = '74a4bcc3b638a70415';//yikebaocai
+        $appSecret = '91b7dffe7314369b44f2a1cc79b39695';//yikebaocai
+
         $client = new \KdtApiClient($appId, $appSecret);
 
 
         $method = 'kdt.users.weixin.follower.get';
         $params = [
-            'weixin_openid' => 'oNo0ot8XsANeeMTOXqRc112LcF6I'
+            'weixin_openid' => 'ozolMuAnTRGa3UUqyJFEFiGEZOy0'
 
         ];
 
@@ -293,15 +281,17 @@ class IndexController extends Controller
 
     public function kdt_jf()
     {
-        $appId = '2c61af3095a3518214';
-        $appSecret = '0ee9bfdeced099f98ad0c714f365fc0f';
+//        $appId = '2c61af3095a3518214';//baocaiwang
+//        $appSecret = '0ee9bfdeced099f98ad0c714f365fc0f';//boacaiwang
+        $appId = '74a4bcc3b638a70415';//yikebaocai
+        $appSecret = '91b7dffe7314369b44f2a1cc79b39695';//yikebaocai
+
         $client = new \KdtApiClient($appId, $appSecret);
 
 
         $method = 'kdt.crm.fans.points.get';
         $params = [
-            'fans_id' => '45524597'
-
+            'fans_id' => '1048863221'
         ];
 
 
@@ -311,6 +301,50 @@ class IndexController extends Controller
 
 
     }
+
+    public function kdt_jf_op(){
+
+        $appId = '74a4bcc3b638a70415';//yikebaocai
+        $appSecret = '91b7dffe7314369b44f2a1cc79b39695';//yikebaocai
+
+        $client = new \KdtApiClient($appId, $appSecret);
+
+
+//        $method = 'kdt.crm.fans.points.payout.get';
+        $method = 'kdt.crm.fans.points.payin.get';
+        $params = [
+            'fans_id' => '1048863221',
+            'points'=>20,
+            'kdt_id'=>'16089352',
+            'reason'=>'充值积分'
+        ];
+
+
+         $rs = $client->get($method, $params);
+        dump($rs) ;
+    }
+
+    public function kdt_jf_query(){
+
+        $appId = '74a4bcc3b638a70415';//yikebaocai
+        $appSecret = '91b7dffe7314369b44f2a1cc79b39695';//yikebaocai
+
+        $client = new \KdtApiClient($appId, $appSecret);
+
+
+        $method = 'kdt.crm.fans.points.changelog.get';
+        $params = [
+            'fans_id' => '1048863221',
+            'points'=>20,
+            'kdt_id'=>'16089352'
+        ];
+
+
+        $rs = $client->get($method, $params);
+        dump($rs) ;
+    }
+
+
 
 
 
