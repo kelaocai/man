@@ -4,6 +4,7 @@ namespace Baocai\Controller;
 use Think\Controller;
 
 Vendor('Feyin.FeyinAPI');
+Vendor('ELind.ELindAPI');
 Vendor('kf5.Client');
 Vendor('SensorsAnalytics.SensorsAnalytics');
 Vendor('kf5.core.apiRequire');
@@ -258,11 +259,11 @@ class IndexController extends Controller
     }
     public function kdt_user()
     {
-//        $appId = '2c61af3095a3518214';
-//        $appSecret = '0ee9bfdeced099f98ad0c714f365fc0f';
+        $appId = '2c61af3095a3518214';
+        $appSecret = '0ee9bfdeced099f98ad0c714f365fc0f';
 
-        $appId = '74a4bcc3b638a70415';//yikebaocai
-        $appSecret = '91b7dffe7314369b44f2a1cc79b39695';//yikebaocai
+//        $appId = '74a4bcc3b638a70415';//yikebaocai
+//        $appSecret = '91b7dffe7314369b44f2a1cc79b39695';//yikebaocai
 
         $client = new \KdtApiClient($appId, $appSecret);
 
@@ -283,17 +284,17 @@ class IndexController extends Controller
 
     public function kdt_jf()
     {
-//        $appId = '2c61af3095a3518214';//baocaiwang
-//        $appSecret = '0ee9bfdeced099f98ad0c714f365fc0f';//boacaiwang
-        $appId = '74a4bcc3b638a70415';//yikebaocai
-        $appSecret = '91b7dffe7314369b44f2a1cc79b39695';//yikebaocai
+        $appId = '2c61af3095a3518214';//baocaiwang
+        $appSecret = '0ee9bfdeced099f98ad0c714f365fc0f';//boacaiwang
+//        $appId = '74a4bcc3b638a70415';//yikebaocai
+//        $appSecret = '91b7dffe7314369b44f2a1cc79b39695';//yikebaocai
 
         $client = new \KdtApiClient($appId, $appSecret);
 
 
         $method = 'kdt.crm.fans.points.get';
         $params = [
-            'fans_id' => ''
+            'fans_id' => '1048863221'
 
 
         ];
@@ -310,6 +311,14 @@ class IndexController extends Controller
         $redirect_uri = 'http://baocai.vip.natapp.cn/man/?m=home&c=index&a=callback';
         redirect("https://open.koudaitong.com/oauth/authorize?client_id=62100d9ae0aa97dd6e&response_type=code&state=bc&redirect_uri=http://baocai.vip.natapp.cn/man/?m=home%26c=index%26a=callback", 2, '页面跳转中...');
 
+    }
+
+    public function elind(){
+        $print = new \Yprint();
+        $content = "测试测试";
+        $apiKey = "85b279433a173b5a27cfd623fc4ab4c7295eb17f";
+        $msign = 'sb86ib6hysee';
+        $print->action_print(5533,'4004512863',$content,$apiKey,$msign);
     }
 
 
