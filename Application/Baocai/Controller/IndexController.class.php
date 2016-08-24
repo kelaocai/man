@@ -226,13 +226,15 @@ class IndexController extends Controller
         if($msg['trade']['status']=='WAIT_SELLER_SEND_GOODS'){
 
             //推送小票信息
-            $device_no='9982172973682014';
+//            $device_no='9982172973682014';
+            $device_no='4600182785048629';
             $freeMessage = array(
                 'memberCode' => MEMBER_CODE,
                 'msgDetail' =>'订单号'.$trade['num_iid'].$msg['trade']['status_str'],
                 'deviceNo' => $device_no,
                 'msgNo' =>time(),
             );
+            sendFreeMessage($freeMessage);
         }
 
 
@@ -300,7 +302,7 @@ class IndexController extends Controller
 
         $method = 'kdt.crm.fans.points.get';
         $params = [
-            'fans_id' => '45524597'
+            'fans_id' => ''
 
         ];
 
@@ -309,6 +311,12 @@ class IndexController extends Controller
         echo "<meta http-equiv='Content-Type'' content='text/html; charset=utf-8'>";
         dump($rs);
 
+
+    }
+
+    public function kdt_auth(){
+        $redirect_uri = 'http://baocai.vip.natapp.cn/man/?m=home&c=index&a=callback';
+        redirect("https://open.koudaitong.com/oauth/authorize?client_id=62100d9ae0aa97dd6e&response_type=code&state=bc&redirect_uri=http://baocai.vip.natapp.cn/man/?m=home%26c=index%26a=callback", 2, '页面跳转中...');
 
     }
 
