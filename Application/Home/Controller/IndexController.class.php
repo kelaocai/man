@@ -6,7 +6,7 @@ use Think\Controller;
 use Think\Log\Driver\Sae;
 use Think\Think;
 
-include 'FeyinAPI.php';
+Vendor('Feyin.FeyinAPI');
 Vendor('Kdt.lib.SimpleHttpClient');
 Vendor('Kdt.lib.KdtApiClient');
 Vendor('Kdt.lib.KdtApiOauthClient');
@@ -43,57 +43,101 @@ class IndexController extends Controller
             'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
         ];
 
-//        dump($options);
+
+        $HOST_URL = 'http://' . $_SERVER['HTTP_HOST'];
+
         $weObj = new \Org\Wx\Wechat($options);
         $weObj->valid();
         $type = $weObj->getRev()->getRevType();
+        \Think\Log::record('微信消息代码:' . $type, 'INFO');
         switch ($type) {
             case \Org\Wx\Wechat::MSGTYPE_TEXT:
-                $msgNo = time() + 1;
-                $freeMessage = array(
-                    'memberCode' => MEMBER_CODE,
-                    'msgDetail' => '' . $weObj->getRevContent(),
-                    'deviceNo' => DEVICE_NO,
-                    'msgNo' => $msgNo,
-                );
-                $pr_status = sendFreeMessage($freeMessage);
-//                $pr_status = 1;
-                $usr_info = $weObj->getUserInfo($weObj->getRevFrom());
-                //\Think\Log::write($usr_info['nickname'].'我的记12录'.$weObj->getRevFrom(),'WARN');
-
-                //$pr_status=sendMail('34206043@qq.com',$usr_info['nickname'].'微信发来信息',$weObj->getRevContent().'<img src='.$usr_info['headimgurl'].' />.');
-
-                $weObj->text("发送:" . $pr_status)->reply();
-
-
-                exit;
+                $weObj->text('jajaj')->reply();
                 break;
             case \Org\Wx\Wechat::MSGTYPE_EVENT:
+                if (isset($weObj->getRevEvent()['key'])) {
+                    $key = $weObj->getRevEvent()['key'];
+                    \Think\Log::record('微信EventKey:' . $key, 'INFO');
+                    switch ($key) {
+                        case MENU_KEY_NEWUSER:
+
+                            $user_openid = $weObj->getRev()->getRevFrom();
+                            $url = $HOST_URL . U('Demo/index/index', array('openid' => $user_openid));
+                            session('wx_user.openid', $user_openid);
+                            $weObj->text("<a href='$url'>新用户注册,点击开始</a>")->reply();
+                            break;
+                        case MENU_KEY_PROGRESS:
+
+                            //取用户信息
+                            $user_openid = $weObj->getRev()->getRevFrom();
+                            $user = M("user", "ss_", "DB_CONFIG_APP");
+                            $map = array('openid' => $user_openid);
+                            $data_user = $user->where($map)->order('id desc')->find();
+                            //取最新的订单记录
+                            $orders = M("order", "ss_", "DB_CONFIG_APP");
+                            $map = array('userid' => $data_user['id']);
+                            $order = $orders->where($map)->order('createdate desc')->find();
+
+                            $url = $HOST_URL . U('Demo/index/jd', 'kfid=' . $order['kfid']);
+                            $progress_status = $order['status'] * 20;
+                            $weObj->text("<a href='$url'>检测报告进度[$progress_status%],点击查看</a>")->reply();
+                            break;
+
+                        case MENU_KEY_SCAN:
+                            $weObj->text($weObj->getRevScanInfo()['ScanResult'])->reply();
+                            break;
+
+
+                    }
+                } else {
+                    $event = $weObj->getRevEvent()['event'];
+                    \Think\Log::record('微信事件代码:' . $event, 'INFO');
+                    switch ($event) {
+                        case \Org\Wx\Wechat::EVENT_CARD_USER_GET:
+                            $card = $weObj->getRev()->getRevCardGet();
+                            $user_openid = $weObj->getRev()->getRevFrom();
+                            \Think\Log::record('卡券领取:' . $user_openid . '，code:' . $card['UserCardCode'], 'WARN');
+                            break;
+
+                        case  \Org\Wx\Wechat::EVENT_CARD_PASS:
+                            $cardid = $weObj->getRev()->getRevCardPass();
+                            \Think\Log::record('卡券审核通过，cardid' . $cardid, 'WARN');
+                            break;
+                        case  \Org\Wx\Wechat::EVENT_CARD_NOTPASS:
+                            $cardid = $weObj->getRev()->getRevCardPass();
+                            \Think\Log::record('卡券未通过，cardid' . $cardid, 'WARN');
+                            break;
+
+                        case  \Org\Wx\Wechat::EVENT_MERCHANT_ORDER:
+                            $order_id = $weObj->getRev()->getRevOrderId();
+                            $order_info = $weObj->getOrderByID($order_id);
+                            \Think\Log::record('order_info' . json_encode($order_info), 'WARN');
+
+//                            $prd_name=explode('$',$order_info['product_sku']);
+                            $prd_name=$order_info['product_name'];
+                            $prd_price=$order_info['product_price'];
+                            $prd_count=$order_info['product_count'];
+
+                            $msgInfo = array (
+                                'memberCode'=>MEMBER_CODE,
+                                'charge'=>$order_info['product_price'],
+                                'customerName'=>$order_info['buyer_nick'],
+                                'customerPhone'=>$order_info['receiver_mobile'],
+                                'customerAddress'=>$order_info['receiver_province'].$order_info['receiver_address'],
+                                'customerMemo'=>'请快点送货',
+                                'msgDetail'=>$prd_name.'@10'.'@'.$prd_count
+                            );
+
+                            $this->printXp($msgInfo);
+                            break;
+
+
+                    }
+                }
                 break;
             case \Org\Wx\Wechat::MSGTYPE_IMAGE:
                 break;
             case \Org\Wx\Wechat::MSGTYPE_LOCATION:
-                $Geo = $weObj->getRevGeo();
-                $Location_X = $Geo['x'];
-                $Location_Y = $Geo['y'];
-//                $weObj->text("zuobiao:".$Location_X.",".$Location_Y)->reply();
-                $params = [
-                    'ak' => 'lB3MdI4HADGDT8trntoLxOWR',
-                    'geotable_id' => 143034,
-                    'location' => $Location_Y . ',' . $Location_X,
-                    'radius' => 1500
-                ];
-                $rs = \SimpleHttpClient::get('http://api.map.baidu.com/geosearch/v3/nearby', $params);
-                $data = json_decode($rs, true);
-                $add_list = '';
-                \Think\Log::write($rs . 'sss', 'WARN');
-                foreach ($data['contents'] as $key => $val) {
-                    $add_list = $add_list . $val['shop_name'] . ":" . $val['address'] . "\n";
-//                    $add_list = $add_list . $val['address'] . "\n";
-
-                }
-
-                $weObj->text("发现【" . $data['total'] . "】颗包菜\n" . $add_list)->reply();
                 break;
             default:
                 $weObj->text("help info")->reply();
@@ -101,6 +145,7 @@ class IndexController extends Controller
 
 
     }
+
 
     public function fy()
     {
@@ -110,35 +155,68 @@ class IndexController extends Controller
         $xp_msg = I('post.xp_msg');
         $xp_shopid = I('post.xp_shopid');
 
-        $device_no='9982172973682014';
+        $device_no = '9982172973682014';
         $msgNo = time() + 1;
 
-        switch ($xp_shopid){
+        switch ($xp_shopid) {
             case 1:
-                $device_no='4600042606700803';
+                $device_no = '4600042606700803';
                 break;
             case 2:
-                $device_no='4600042606700825';
+                $device_no = '4600042606700825';
                 break;
             default:
-                $device_no='9982172973682014';
+                $device_no = '9982172973682014';
         }
 
 
         $freeMessage = array(
             'memberCode' => MEMBER_CODE,
-            'msgDetail' =>$xp_msg,
+            'msgDetail' => $xp_msg,
             'deviceNo' => $device_no,
             'msgNo' => $msgNo,
         );
 
-        $rs='发送状态:'.sendFreeMessage($freeMessage).'<br> 发送设备号:'.$device_no;
+        $rs = '发送状态:' . sendFreeMessage($freeMessage) . '<br> 发送设备号:' . $device_no;
 
         $this->assign('rs', $rs);
         $this->display();
 
+    }
 
 
+    public function printXp($msg=['memberCode'=>MEMBER_CODE])
+    {
+
+        $msg['memberCode']=MEMBER_CODE;
+        $msg['companyName']='米兜烘焙店-';
+        $msg['deviceNo']='4600042606700825';
+        $msg['msgNo']=time() + 1;
+
+//        $freeMessage = array(
+//            'memberCode' => MEMBER_CODE,
+//            'msgDetail' =>$msg,
+//            'deviceNo' => $device_no,
+//            'msgNo' => $msgNo,
+//        );
+
+        $msgNo = time()+1;
+        /*
+         格式化的打印内容
+        */
+//        $msgInfo = array (
+//            'memberCode'=>MEMBER_CODE,
+//            'charge'=>'3000',
+//            'customerName'=>'老财',
+//            'customerPhone'=>'13321332245',
+//            'customerAddress'=>'翰岭院书房',
+//            'customerMemo'=>'请快点送货',
+//            'msgDetail'=>'$购买商品:$小兔软糖@1000@1',
+//            'deviceNo'=>'4600042606700825',
+//            'msgNo'=>$msgNo,
+//        );
+
+        echo sendFormatedMessage($msg);
 
     }
 
@@ -148,22 +226,26 @@ class IndexController extends Controller
         $this->assign('post_url', U('home/index/fy'));
         $this->display();
 
-
     }
 
     public function test()
     {
 
-        $options = [
-            'token' => C('WX_TOKEN'), //填写你设定的key
-            'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
-            'appid' => C('WX_APPID'), //填写高级调用功能的app id
-            'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
-        ];
+//        $options = [
+//            'token' => C('WX_TOKEN'), //填写你设定的key
+//            'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
+//            'appid' => C('WX_APPID'), //填写高级调用功能的app id
+//            'appsecret' => C('WX_APPSECRET') //填写高级调用功能的密钥
+//        ];
+//
+//        $weObj = new \Org\Wx\Wechat($options);
+//        $auth = $weObj->checkAuth();
+//        echo $auth;
 
-        $weObj = new \Org\Wx\Wechat($options);
-        $auth = $weObj->checkAuth();
-        echo $auth;
+        $a='$ss:$2rt';
+        $b=explode('$',$a);
+        echo $b[2];
+
 
     }
 
@@ -205,16 +287,16 @@ class IndexController extends Controller
         $method = 'kdt.trades.sold.get';
         $params = [
             'page_size' => 50,
-            'status'=>'WAIT_BUYER_CONFIRM_GOODS',
-            'start_created'=>'2016-07-01'
+            'status' => 'WAIT_BUYER_CONFIRM_GOODS',
+            'start_created' => '2016-07-01'
         ];
 
 
         $rs = $client->get($method, $params);
         foreach ($rs as $key => $val) {
             foreach ($val['trades'] as $key2 => $val2) {
-                foreach ($val2['orders'] as $key3=>$val3){
-                    echo ($val3['sku_properties_name'] . '--' . $val2['payment']. '--' . $val2['num']).'<br>' . '<br>';
+                foreach ($val2['orders'] as $key3 => $val3) {
+                    echo ($val3['sku_properties_name'] . '--' . $val2['payment'] . '--' . $val2['num']) . '<br>' . '<br>';
                 }
 
             }
@@ -549,8 +631,9 @@ class IndexController extends Controller
         }
 
     }
-    
-    public function wxjs(){
+
+    public function wxjs()
+    {
 
         $options = [
             'token' => C('WX_TOKEN'), //填写你设定的key
@@ -574,13 +657,14 @@ class IndexController extends Controller
         $js_sign = $weObj->getJsSign($url);
         $this->assign('js_sign', $js_sign);
         $this->display();
-        
+
     }
 
-    private function get_js_sign(){
+    private function get_js_sign()
+    {
 
 
-        if(!$rs_js_sign=S('js_sign')) {
+        if (!$rs_js_sign = S('js_sign')) {
 
             $options = [
                 'token' => C('WX_TOKEN'), //填写你设定的key
@@ -604,14 +688,15 @@ class IndexController extends Controller
             $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             $js_sign = $weObj->getJsSign($url);
             S('js_sign', $js_sign, 24 * 3600);
-            $rs_js_sign =$js_sign;
+            $rs_js_sign = $js_sign;
 
         }
 
         return $rs_js_sign;;
     }
 
-    public function find_baocai(){
+    public function find_baocai()
+    {
         $Location_X = I('post.latitude');
         $Location_Y = I('post.longitude');
         $params = [
@@ -631,7 +716,8 @@ class IndexController extends Controller
         $this->ajaxReturn("发现【" . $data['total'] . "】颗包菜\n" . $add_list);
     }
 
-    public function create_shop(){
+    public function create_shop()
+    {
         $latitude = $_POST['lat'];
         $longitude = $_POST['lng'];
         $shop_name = $_POST['shop_name'];
@@ -653,13 +739,15 @@ class IndexController extends Controller
         $this->ajaxReturn($data);
     }
 
-    public function wx_zh(){
+    public function wx_zh()
+    {
         $this->assign('post_url', U('home/index/createShop'));
         $this->display();
     }
 
 
-    public function wx_bj(){
+    public function wx_bj()
+    {
         $options = [
             'token' => C('WX_TOKEN'), //填写你设定的key
             'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
@@ -685,17 +773,19 @@ class IndexController extends Controller
         $this->assign('js_url', $url);
         $this->display();
     }
-    
-    public function bj(){
-        $bj= M("bj", "ss_", "DB_CONFIG_APP");
-        $data['data']=$_POST['lat'].','.$_POST['lng'];
-        $data['time']=date('Y-m-d H:i:s',time());
+
+    public function bj()
+    {
+        $bj = M("bj", "ss_", "DB_CONFIG_APP");
+        $data['data'] = $_POST['lat'] . ',' . $_POST['lng'];
+        $data['time'] = date('Y-m-d H:i:s', time());
         $bj->add($data);
 //        echo time();
     }
 
 
-    public function wx_yao(){
+    public function wx_yao()
+    {
         $options = [
             'token' => C('WX_TOKEN'), //填写你设定的key
             'encodingaeskey' => C('WX_ENCODINGAESKEY'), //填写加密用的EncodingAESKey
@@ -722,7 +812,6 @@ class IndexController extends Controller
         $this->assign('js_ticket', $js_ticket);
         $this->display();
     }
-   
 
 
 }

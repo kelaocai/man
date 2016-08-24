@@ -47,6 +47,7 @@ class IndexController extends Controller
             case \Org\Wx\Wechat::MSGTYPE_EVENT:
                 if (isset($weObj->getRevEvent()['key'])) {
                     $key = $weObj->getRevEvent()['key'];
+                    \Think\Log::record('微信EventKey:' . $key, 'INFO');
                     switch ($key) {
                         case MENU_KEY_NEWUSER:
 
@@ -264,19 +265,15 @@ class IndexController extends Controller
         $kf_id = $kf_data->ticket->id;
 
 
-
         $order = M("order", "ss_", "DB_CONFIG_APP");
         $new_order = array('orderno' => $orderno, 'userid' => $data_user['id'], 'itemid' => '1', 'createdate' => date('Y-m-d h:i:s', time()), 'status' => '0', 'kfid' => $kf_id);
-        if($order->add($new_order)){
+        if ($order->add($new_order)) {
             $url = 'http://' . $_SERVER['HTTP_HOST'] . U('Demo/index/jd', 'kfid=' . $kf_id);
             $rs = array('message' => $kf_id, 'url' => $url);
 
         };
 
         $this->ajaxReturn($rs);
-
-
-
 
 
 //
@@ -402,9 +399,9 @@ class IndexController extends Controller
         ];
 
         $weObj = new \Org\Wx\Wechat($options);
-        $card_list=$weObj->getCardCodeList(I('get.openid'),I('get.card_id'));
-        if(isset($card_list[1])){
-            $card_code= $card_list[1]['code'];
+        $card_list = $weObj->getCardCodeList(I('get.openid'), I('get.card_id'));
+        if (isset($card_list[1])) {
+            $card_code = $card_list[1]['code'];
             $data = array(
                 'membership_number' => $card_code,
                 'code' => $card_code
@@ -415,7 +412,6 @@ class IndexController extends Controller
                 echo('false');
             }
         }
-
 
 
         $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -445,19 +441,20 @@ class IndexController extends Controller
 
         $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $js_sign = $weObj->getJsSign($url);
-        $js_card_ticket=$weObj->getJsCardTicket();
-        $timestamp=time();
-        $nonce_str=$weObj->generateNonceStr();
-        $ext=array('api_ticket'=>$js_card_ticket,'timestamp'=>$timestamp,'nonce_str'=>$nonce_str,'card_id'=>'pNo0ot4r6de4pms2Mm_wz-NOts0E');
+        $js_card_ticket = $weObj->getJsCardTicket();
+        $timestamp = time();
+        $nonce_str = $weObj->generateNonceStr();
+        $ext = array('api_ticket' => $js_card_ticket, 'timestamp' => $timestamp, 'nonce_str' => $nonce_str, 'card_id' => 'pNo0ot4r6de4pms2Mm_wz-NOts0E');
         $sign = $weObj->getTicketSignature($ext);
-        $cardExt=array('timestamp'=>$timestamp,'nonce_str'=>$nonce_str,'signature'=>$sign);
+        $cardExt = array('timestamp' => $timestamp, 'nonce_str' => $nonce_str, 'signature' => $sign);
         $this->assign('js_sign', $js_sign);
         $this->assign('js_card_ticket', $js_card_ticket);
-        $this->assign('js_card_ext', json_encode($cardExt,true));
+        $this->assign('js_card_ext', json_encode($cardExt, true));
         $this->display();
     }
 
-    public function getCardCode(){
+    public function getCardCode()
+    {
 
         $options = [
             'token' => C('WX_TOKEN'),
@@ -467,16 +464,18 @@ class IndexController extends Controller
         ];
 
         $weObj = new \Org\Wx\Wechat($options);
-        $rs=$weObj->getCardCodeList('oNo0ot8XsANeeMTOXqRc112LcF6I','pNo0ot4r6de4pms2Mm_wz-NOts0E');
+        $rs = $weObj->getCardCodeList('oNo0ot8XsANeeMTOXqRc112LcF6I', 'pNo0ot4r6de4pms2Mm_wz-NOts0E');
 
 
     }
 
-    public function weui(){
+    public function weui()
+    {
         $this->display();
     }
 
-    public function kf(){
+    public function kf()
+    {
 
         $kf_domain = C('KF_DOMAIN');
         $kf_email = C('KF_EMAIL');
@@ -491,14 +490,26 @@ class IndexController extends Controller
             'comment' => array('content' => '订单[' . 'xxx' . ']'), 'requester' => array('email' => 'kelaocai@163.com', 'name' => '测试一下')
         );
 
-        \Think\Log::record('start:' , 'INFO');
+        \Think\Log::record('start:', 'INFO');
 
         $kf_data = $kf->tickets()->create($kf_order);
 
         dump($kf_data);
     }
 
+    public function register()
+    {
 
+        $this->display();
+
+    }
+
+    public function buy()
+    {
+
+        $this->display();
+
+    }
 
 
 }

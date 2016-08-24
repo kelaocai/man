@@ -134,7 +134,8 @@ function sendFormatedMessage($msgInfo) {
 
 	$msgInfo['securityCode'] = md5($content);
 	$msgInfo['mode']=1;
-	
+	$msgInfo['companyName']='米兜烘焙店-';
+
 	return sendMessage($msgInfo);
 }
 
